@@ -8,6 +8,7 @@ public class MapHiveApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(MapHiveApplication.class, args);
+		System.out.println("Hello world");
 	}
 
 }
