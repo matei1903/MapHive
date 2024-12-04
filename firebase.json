@@ -1,10 +1,15 @@
 {
   "hosting": {
-    "public": "public",
+    "target": "maphive-6ebff",
+    "public": "./frontend/dist",  
     "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
+      "./.firebase"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
     ]
   }
 }
