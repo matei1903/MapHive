@@ -1,6 +1,5 @@
 {
   "hosting": {
-    "target": "maphive-6ebff",
     "public": "./frontend/dist",  
     "ignore": [
       "./.firebase"
