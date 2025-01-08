@@ -16,7 +16,7 @@ const GlobalStypes = createGlobalStyle`
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif, fantasy;
 `;
 const Loader = () => <div>loading...</div>;
-export default () => {
+const App = () => {
   return (
     <>
       <GlobalStypes />
@@ -26,3 +26,4 @@ export default () => {
     </>
   );
 };
+export default App;
