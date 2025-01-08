@@ -2,7 +2,7 @@
 import './App.css';
 
 import React, { Suspense } from "react";
-import styled, { createGlobalStyle } from "styled-components";
+//import styled, { createGlobalStyle } from "styled-components";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 //import { FirebaseProvider } from "@MapHive/components/context/Firebase";
 const Harta = React.lazy(() => import("./pages/Harta"));
