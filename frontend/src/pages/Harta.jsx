@@ -15,7 +15,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React nu vreau
+          Asta e din pagina Harta
         </a>
       </header>
     </div>
