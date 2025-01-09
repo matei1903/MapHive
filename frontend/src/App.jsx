@@ -4,7 +4,7 @@ import './App.css';
 import React, { Suspense } from "react";
 import { createGlobalStyle } from "styled-components";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-//import { FirebaseProvider } from "@MapHive/components/context/Firebase";
+import { FirebaseProvider } from "./context/FirebaseContext";
 const Harta = React.lazy(() => import("./pages/Harta"));
 const router = createBrowserRouter([
   { path: "/", element: <Harta />},
@@ -18,12 +18,13 @@ const GlobalStypes = createGlobalStyle`
 const Loader = () => <div>loading...</div>;
 const App = () => {
   return (
-    <>
+    <FirebaseProvider>
       <GlobalStypes />
       <Suspense fallback={<Loader />}>
         <RouterProvider router={router} />
       </Suspense>
-    </>
+    </FirebaseProvider>
   );
 };
+
 export default App;
