@@ -25,7 +25,7 @@ export const FirebaseProvider = ({ children }) => {
       const app = initializeApp(firebaseConfig);
       setFirebaseApp(app); // Setează aplicația Firebase
     }
-  }, []);  // Folosește un array gol pentru a executa doar o dată la montarea componentei
+  });  // Folosește un array gol pentru a executa doar o dată la montarea componentei
 
   return (
     <FirebaseContext.Provider value={firebaseApp}>
