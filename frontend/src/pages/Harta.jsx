@@ -4,11 +4,14 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 
 const Harta = () => {
   return (
-    <MapContainer center={[44.4268, 26.1025]} zoom={8} style={{ width: "300px", height: "50vh", margin: "0 auto", display: "block"  }}>
-      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+    <MapContainer center={[45.9432, 26.1025]} zoom={13} scrollWheelZoom={false}>
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
       <Marker position={[44.4268, 26.1025]}>
         <Popup>
-          Acesta este un popup pe hartă.
+          A pretty CSS3 popup. <br /> Easily customizable.
         </Popup>
       </Marker>
     </MapContainer>
