@@ -5,14 +5,14 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 
 const Harta = () => {
   return (
-    <MapContainer center={[51.505, -0.09]} zoom={13} style={{ width: "100%", height: "100%" }}>
-      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-      <Marker position={[51.505, -0.09]}>
-        <Popup>
-          Acesta este un popup pe hartă.
-        </Popup>
-      </Marker>
-    </MapContainer>
+    <MapContainer center={[45.9432, 24.9668]} zoom={6} style={{ width: "66.67%", height: "50vh", margin: "0 auto", display: "block"  }}>
+    <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+    <Marker position={[45.9432, 24.9668]}>
+      <Popup>
+        Acesta este un popup pe hartă.
+      </Popup>
+    </Marker>
+  </MapContainer>
   );
 };
 
