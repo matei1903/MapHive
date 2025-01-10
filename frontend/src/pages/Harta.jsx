@@ -5,12 +5,13 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
 // Configurare marker implicit
-delete L.Icon.Default.prototype._getIconUrl;
-
-L.Icon.Default.mergeOptions({
-  iconUrl: require("leaflet/dist/images/marker-icon.png"),
-  iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
-  shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
+const customMarkerIcon = new L.Icon({
+  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png", // URL pentru marker
+  iconSize: [30, 45], // Dimensiunea marker-ului
+  iconAnchor: [15, 45], // Punctul de ancorare al marker-ului
+  popupAnchor: [0, -40], // Punctul de ancorare al popup-ului
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png", // URL pentru umbră
+  shadowSize: [40, 40], // Dimensiunea umbrei
 });
 
 const Harta = () => {
@@ -20,11 +21,11 @@ const Harta = () => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <L.Marker position={[44.4268, 26.1025]}>
-        <L.Popup>
-          A pretty CSS3 popup. <br /> Easily customizable.
-        </L.Popup>
-      </L.Marker>
+      <Marker position={[44.4268, 26.1025]} icon={customMarkerIcon}>
+        <Popup>
+          Te dau cu capul de toti peretii <br /> Fraiere
+        </Popup>
+      </Marker>
     </MapContainer>
   );
 };
