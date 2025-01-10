@@ -8,7 +8,7 @@ import styled from "styled-components";
 const Container = styled.div`
   height: 600px;
   width: 80%;
-  margin-top: 10%;
+  margin-top: 10% !important;
   margin: 0 auto; /* Centrează pe orizontală */
   display: flex;
   justify-content: center;
