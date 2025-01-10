@@ -3,6 +3,21 @@ import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import styled from "styled-components";
+
+const MapContainer = styled.div`
+  height: 600px;
+  width: 80%;
+  margin-top: 10%;
+  margin: 0 auto; /* Centrează pe orizontală */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px; 
+  overflow: hidden; 
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.25), 
+              inset 0px 3px 10px rgba(0, 0, 0, 0.15); 
+`;
 
 // Configurare marker implicit
 const customMarkerIcon = new L.Icon({
@@ -16,7 +31,7 @@ const customMarkerIcon = new L.Icon({
 
 const Harta = () => {
   return (
-    <MapContainer center={[44.4268, 26.1025]} zoom={13} scrollWheelZoom={false} style={{height: "600px", width: "80%", marginTop: "10%"}}>
+    <MapContainer center={[44.4268, 26.1025]} zoom={13} scrollWheelZoom={false}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
