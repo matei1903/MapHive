@@ -16,7 +16,7 @@ const customMarkerIcon = new L.Icon({
 
 const Harta = () => {
   return (
-    <MapContainer center={[45.9432, 26.1025]} zoom={13} scrollWheelZoom={false} style={{height: "500px", width: "100%"}}>
+    <MapContainer center={[44.4268, 26.1025]} zoom={13} scrollWheelZoom={false} style={{height: "600px", width: "80%", marginTop: "10%"}}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
