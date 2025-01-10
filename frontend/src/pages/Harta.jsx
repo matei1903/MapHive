@@ -32,12 +32,12 @@ const customMarkerIcon = new L.Icon({
 const Harta = () => {
   return (
     <Container>
-      <MapContainer center={[44.4268, 26.1025]} zoom={13} scrollWheelZoom={false} style={{ height: "100%", width: "100%" }}>
+      <MapContainer center={[44.5183, 26.1437]} zoom={13} scrollWheelZoom={false} style={{ height: "100%", width: "100%" }}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <Marker position={[44.4268, 26.1025]} icon={customMarkerIcon}>
+      <Marker position={[44.5183, 26.1437]} icon={customMarkerIcon}>
         <Popup>
           Te dau cu capul de toti peretii <br /> Fraiere
         </Popup>
