@@ -2,6 +2,16 @@
 import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+
+// Configurare marker implicit
+delete L.Icon.Default.prototype._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+  iconUrl: require("leaflet/dist/images/marker-icon.png"),
+  iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
+  shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
+});
 
 const Harta = () => {
   return (
@@ -10,11 +20,11 @@ const Harta = () => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <Marker position={[44.4268, 26.1025]}>
-        <Popup>
+      <L.Marker position={[44.4268, 26.1025]}>
+        <L.Popup>
           A pretty CSS3 popup. <br /> Easily customizable.
-        </Popup>
-      </Marker>
+        </L.Popup>
+      </L.Marker>
     </MapContainer>
   );
 };
