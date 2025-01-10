@@ -5,7 +5,7 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import styled from "styled-components";
 
-const MapContainer = styled.div`
+const Container = styled.div`
   height: 600px;
   width: 80%;
   margin-top: 10%;
@@ -31,7 +31,8 @@ const customMarkerIcon = new L.Icon({
 
 const Harta = () => {
   return (
-    <MapContainer center={[44.4268, 26.1025]} zoom={13} scrollWheelZoom={false}>
+    <Container>
+      <MapContainer center={[44.4268, 26.1025]} zoom={13} scrollWheelZoom={false} style={{ height: "100%", width: "100%" }}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -42,6 +43,8 @@ const Harta = () => {
         </Popup>
       </Marker>
     </MapContainer>
+    </Container>
+    
   );
 };
 
