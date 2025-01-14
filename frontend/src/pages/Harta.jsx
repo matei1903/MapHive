@@ -32,7 +32,7 @@ const customMarkerIcon = new L.Icon({
 
 const Harta = () => {
   const [locatii, setLocatii] = useState([]);
-  const [recenzii, setRecenzii] = useState({});
+  const [recenzii, setRecenzii] = useState([]);
 
   useEffect(() => {
     // Preluare locații din API
@@ -46,19 +46,12 @@ const Harta = () => {
       }
     };
 
+    // Preluare recenzii din API
     const fetchRecenzii = async () => {
       try {
         const response = await axios.get('http://localhost:8080/api/recenzii');
         console.log("Răspuns API recenzii:", response.data); // Debugging
-        const recenziiMap = {};
-        response.data.forEach((recenzie) => {
-          const locatieId = recenzie.locatieId; // Presupunem că există acest câmp
-          if (!recenziiMap[locatieId]) {
-            recenziiMap[locatieId] = [];
-          }
-          recenziiMap[locatieId].push(recenzie);
-        });
-        setRecenzii(recenziiMap);
+        setRecenzii(response.data); // Salvează recenziile direct
       } catch (error) {
         console.error("Eroare la preluarea recenziilor:", error);
       }
@@ -75,33 +68,38 @@ const Harta = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {Array.isArray(locatii) && locatii.map((locatie) => (
-          <Marker
-            key={locatie.id}
-            position={[locatie.latitudine, locatie.longitudine]}
-            icon={customMarkerIcon}
-          >
-            <Popup>
-              <strong>{locatie.locatie_nume}</strong><br />
-              <em>{locatie.locatie_adresa}</em><br />
-              {locatie.descriere}<br />
-              <strong>Tip:</strong> {locatie.tipLocatie?.nume}<br />
-              <strong>Recenzii:</strong>
-              <ul>
-                {recenzii[locatie.id]?.length > 0 ? (
-                  recenzii[locatie.id].map((recenzie, index) => (
-                    <li key={index}>
-                      <strong>Rating:</strong> {recenzie.rating}/5<br />
-                      <strong>Comentariu:</strong> {recenzie.comentariu}
-                    </li>
-                  ))
-                ) : (
-                  <li>Nu există recenzii disponibile.</li>
-                )}
-              </ul>
-            </Popup>
-          </Marker>
-        ))}
+        {Array.isArray(locatii) && locatii.map((locatie) => {
+          // Filtrarea recenziilor pentru locația curentă
+          const locatieRecenzii = recenzii.filter(recenzie => recenzie.locatie.id === locatie.id);
+
+          return (
+            <Marker
+              key={locatie.id}
+              position={[locatie.latitudine, locatie.longitudine]}
+              icon={customMarkerIcon}
+            >
+              <Popup>
+                <strong>{locatie.locatie_nume}</strong><br />
+                <em>{locatie.locatie_adresa}</em><br />
+                {locatie.descriere}<br />
+                <strong>Tip:</strong> {locatie.tipLocatie?.nume}<br />
+                <strong>Recenzii:</strong>
+                <ul>
+                  {locatieRecenzii.length > 0 ? (
+                    locatieRecenzii.map((recenzie, index) => (
+                      <li key={index}>
+                        <strong>Rating:</strong> {recenzie.rating}/5<br />
+                        <strong>Comentariu:</strong> {recenzie.comentariu}
+                      </li>
+                    ))
+                  ) : (
+                    <li>Nu există recenzii disponibile.</li>
+                  )}
+                </ul>
+              </Popup>
+            </Marker>
+          );
+        })}
       </MapContainer>
     </Container>
   );
