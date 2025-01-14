@@ -22,12 +22,35 @@ const Container = styled.div`
 const ButtonContainer = styled.div`
   position: absolute;
   top: 10%;
-  left: 10%;
+  left: 50%;
+  transform: translateX(-50%); /* Center the buttons horizontally */
   z-index: 1000;
-  background-color: white;
+  display: flex;
+  gap: 10px;
+  background-color: transparent;
   padding: 10px;
   border-radius: 5px;
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.25);
+`;
+
+const Button = styled.button`
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #ccc;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+
+  &:hover {
+    background-color: #007bff;
+    color: white;
+    transform: scale(1.05);
+  }
+
+  &:focus {
+    outline: none;
+  }
 `;
 
 const customMarkerIcon = new L.Icon({
@@ -86,11 +109,11 @@ const Harta = () => {
     <Container>
       <ButtonContainer>
         {atribute.map((atribut) => (
-          <button key={atribut.id} onClick={() => handleFilterChange(atribut.nume)}>
+          <Button key={atribut.id} onClick={() => handleFilterChange(atribut.nume)}>
             {atribut.nume}
-          </button>
+          </Button>
         ))}
-        <button onClick={() => setFilter('')}>Toate</button> {/* Resetare filtru */}
+        <Button onClick={() => setFilter('')}>Toate</Button> {/* Resetare filtru */}
       </ButtonContainer>
 
       <MapContainer center={[44.4268, 26.1025]} zoom={13} scrollWheelZoom={false} style={{ height: "100%", width: "100%" }}>
