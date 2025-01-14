@@ -38,7 +38,8 @@ const Harta = () => {
     const fetchLocatii = async () => {
       try {
         const response = await axios.get('https://33db-86-124-206-15.ngrok-free.app/api/locatii');
-        setLocatii(response.data);
+        console.log("Răspuns API:", response.data);
+        setLocatii(response.data.locatii);
       } catch (error) {
         console.error("Eroare la preluarea locațiilor:", error);
       }
@@ -48,12 +49,12 @@ const Harta = () => {
 
   return (
     <Container>
-      <MapContainer center={[44.5183, 26.1437]} zoom={13} scrollWheelZoom={false} style={{ height: "100%", width: "100%" }}>
+      <MapContainer center={[44.4268, 26.1025]} zoom={13} scrollWheelZoom={false} style={{ height: "100%", width: "100%" }}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {locatii.map((locatie) => (
+        {Array.isArray(locatii) && locatii.map((locatie) => (
           <Marker
             key={locatie.id}
             position={[locatie.latitudine, locatie.longitudine]}
@@ -61,9 +62,9 @@ const Harta = () => {
           >
             <Popup>
               <strong>{locatie.locatie_nume}</strong><br />
-              {locatie.locatie_adresa}<br />
+              <em>{locatie.locatie_adresa}</em><br />
               {locatie.descriere}<br />
-              Tip: {locatie.tipLocatie?.nume}
+              <strong>Tip:</strong> {locatie.tipLocatie?.nume}
             </Popup>
           </Marker>
         ))}
