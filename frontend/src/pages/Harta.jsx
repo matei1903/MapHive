@@ -68,38 +68,38 @@ const Harta = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {Array.isArray(locatii) && locatii.map((locatie) => {
-          // Filtrarea recenziilor pentru locația curentă
-          const locatieRecenzii = recenzii.filter(recenzie => recenzie.locatie.id === locatie.id);
+       {Array.isArray(locatii) && locatii.map((locatie) => {
+  // Filtrarea recenziilor pentru locația curentă, doar pentru recenzii care au o locatie asociată
+  const locatieRecenzii = recenzii.filter(recenzie => recenzie.locatie && recenzie.locatie.id === locatie.id);
 
-          return (
-            <Marker
-              key={locatie.id}
-              position={[locatie.latitudine, locatie.longitudine]}
-              icon={customMarkerIcon}
-            >
-              <Popup>
-                <strong>{locatie.locatie_nume}</strong><br />
-                <em>{locatie.locatie_adresa}</em><br />
-                {locatie.descriere}<br />
-                <strong>Tip:</strong> {locatie.tipLocatie?.nume}<br />
-                <strong>Recenzii:</strong>
-                <ul>
-                  {locatieRecenzii.length > 0 ? (
-                    locatieRecenzii.map((recenzie, index) => (
-                      <li key={index}>
-                        <strong>Rating:</strong> {recenzie.rating}/5<br />
-                        <strong>Comentariu:</strong> {recenzie.comentariu}
-                      </li>
-                    ))
-                  ) : (
-                    <li>Nu există recenzii disponibile.</li>
-                  )}
-                </ul>
-              </Popup>
-            </Marker>
-          );
-        })}
+  return (
+    <Marker
+      key={locatie.id}
+      position={[locatie.latitudine, locatie.longitudine]}
+      icon={customMarkerIcon}
+    >
+      <Popup>
+        <strong>{locatie.locatie_nume}</strong><br />
+        <em>{locatie.locatie_adresa}</em><br />
+        {locatie.descriere}<br />
+        <strong>Tip:</strong> {locatie.tipLocatie?.nume}<br />
+        <strong>Recenzii:</strong>
+        <ul>
+          {locatieRecenzii.length > 0 ? (
+            locatieRecenzii.map((recenzie, index) => (
+              <li key={index}>
+                <strong>Rating:</strong> {recenzie.rating}/5<br />
+                <strong>Comentariu:</strong> {recenzie.comentariu}
+              </li>
+            ))
+          ) : (
+            <li>Nu există recenzii disponibile.</li>
+          )}
+        </ul>
+      </Popup>
+    </Marker>
+  );
+})}
       </MapContainer>
     </Container>
   );
