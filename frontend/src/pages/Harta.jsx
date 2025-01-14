@@ -1,5 +1,6 @@
 //import '../App.css';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -30,21 +31,44 @@ const customMarkerIcon = new L.Icon({
 });
 
 const Harta = () => {
+  const [locatii, setLocatii] = useState([]);
+
+  useEffect(() => {
+    // Preluare locații din API
+    const fetchLocatii = async () => {
+      try {
+        const response = await axios.get('https://33db-86-124-206-15.ngrok-free.app/api/locatii');
+        setLocatii(response.data);
+      } catch (error) {
+        console.error("Eroare la preluarea locațiilor:", error);
+      }
+    };
+    fetchLocatii();
+  }, []);
+
   return (
     <Container>
       <MapContainer center={[44.5183, 26.1437]} zoom={13} scrollWheelZoom={false} style={{ height: "100%", width: "100%" }}>
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <Marker position={[44.5183, 26.1437]} icon={customMarkerIcon}>
-        <Popup>
-          Te dau cu capul de toti peretii <br /> Fraiere
-        </Popup>
-      </Marker>
-    </MapContainer>
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        {locatii.map((locatie) => (
+          <Marker
+            key={locatie.id}
+            position={[locatie.latitudine, locatie.longitudine]}
+            icon={customMarkerIcon}
+          >
+            <Popup>
+              <strong>{locatie.locatie_nume}</strong><br />
+              {locatie.locatie_adresa}<br />
+              {locatie.descriere}<br />
+              Tip: {locatie.tipLocatie?.nume}
+            </Popup>
+          </Marker>
+        ))}
+      </MapContainer>
     </Container>
-    
   );
 };
 
