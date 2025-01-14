@@ -52,10 +52,11 @@ const Harta = () => {
         console.log("Răspuns API recenzii:", response.data); // Debugging
         const recenziiMap = {};
         response.data.forEach((recenzie) => {
-          if (!recenziiMap[recenzie.locatieId]) {
-            recenziiMap[recenzie.locatieId] = [];
+          const locatieId = recenzie.locatieId; // Presupunem că există acest câmp
+          if (!recenziiMap[locatieId]) {
+            recenziiMap[locatieId] = [];
           }
-          recenziiMap[recenzie.locatieId].push(recenzie);
+          recenziiMap[locatieId].push(recenzie);
         });
         setRecenzii(recenziiMap);
       } catch (error) {
@@ -88,9 +89,10 @@ const Harta = () => {
               <strong>Recenzii:</strong>
               <ul>
                 {recenzii[locatie.id]?.length > 0 ? (
-                  recenzii[locatie.id].map((recenzie) => (
-                    <li key={recenzie.id}>
-                      {recenzie.text} — <em>{recenzie.autor}</em>
+                  recenzii[locatie.id].map((recenzie, index) => (
+                    <li key={index}>
+                      <strong>Rating:</strong> {recenzie.rating}/5<br />
+                      <strong>Comentariu:</strong> {recenzie.comentariu}
                     </li>
                   ))
                 ) : (
