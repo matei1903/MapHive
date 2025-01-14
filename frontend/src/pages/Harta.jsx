@@ -32,19 +32,39 @@ const customMarkerIcon = new L.Icon({
 
 const Harta = () => {
   const [locatii, setLocatii] = useState([]);
+  const [recenzii, setRecenzii] = useState({});
 
   useEffect(() => {
     // Preluare locații din API
     const fetchLocatii = async () => {
       try {
         const response = await axios.get('http://localhost:8080/api/locatii');
-        console.log("Răspuns API:", response.data); // Debugging
+        console.log("Răspuns API locații:", response.data); // Debugging
         setLocatii(response.data); // Direct array, fără proprietatea `locatii`
       } catch (error) {
         console.error("Eroare la preluarea locațiilor:", error);
       }
     };
+
+    const fetchRecenzii = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/recenzii');
+        console.log("Răspuns API recenzii:", response.data); // Debugging
+        const recenziiMap = {};
+        response.data.forEach((recenzie) => {
+          if (!recenziiMap[recenzie.locatieId]) {
+            recenziiMap[recenzie.locatieId] = [];
+          }
+          recenziiMap[recenzie.locatieId].push(recenzie);
+        });
+        setRecenzii(recenziiMap);
+      } catch (error) {
+        console.error("Eroare la preluarea recenziilor:", error);
+      }
+    };
+
     fetchLocatii();
+    fetchRecenzii();
   }, []);
 
   return (
@@ -64,7 +84,19 @@ const Harta = () => {
               <strong>{locatie.locatie_nume}</strong><br />
               <em>{locatie.locatie_adresa}</em><br />
               {locatie.descriere}<br />
-              <strong>Tip:</strong> {locatie.tipLocatie?.nume}
+              <strong>Tip:</strong> {locatie.tipLocatie?.nume}<br />
+              <strong>Recenzii:</strong>
+              <ul>
+                {recenzii[locatie.id]?.length > 0 ? (
+                  recenzii[locatie.id].map((recenzie) => (
+                    <li key={recenzie.id}>
+                      {recenzie.text} — <em>{recenzie.autor}</em>
+                    </li>
+                  ))
+                ) : (
+                  <li>Nu există recenzii disponibile.</li>
+                )}
+              </ul>
             </Popup>
           </Marker>
         ))}
