@@ -71,7 +71,11 @@ const Harta = () => {
   useEffect(() => {
     const fetchLocatii = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/locatii');
+        const response = await axios.get('http://localhost:8080/api/locatii', {
+          headers: {
+            "User-Agent": "CustomAgent/1.0"
+          }
+        });
         setLocatii(response.data);
       } catch (error) {
         console.error("Eroare la preluarea locațiilor:", error);
