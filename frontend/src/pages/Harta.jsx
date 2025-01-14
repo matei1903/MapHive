@@ -71,7 +71,7 @@ const Harta = () => {
   useEffect(() => {
     const fetchLocatii = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/locatii', {
+        const response = await axios.get('https://c6c3-86-124-206-15.ngrok-free.app/api/locatii', {
           headers: {
             "User-Agent": "CustomAgent/1.0"
           }
