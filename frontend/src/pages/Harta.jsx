@@ -37,7 +37,7 @@ const Harta = () => {
     // Preluare locații din API
     const fetchLocatii = async () => {
       try {
-        const response = await axios.get('https://33db-86-124-206-15.ngrok-free.app/api/locatii');
+        const response = await axios.get('http://localhost:8080/api/locatii');
         console.log("Răspuns API:", response.data); // Debugging
         setLocatii(response.data); // Direct array, fără proprietatea `locatii`
       } catch (error) {
