@@ -103,12 +103,23 @@ const Harta = () => {
 
   // Funcția pentru a actualiza locațiile pe baza filtrului
   const handleFilterChange = async (atribut) => {
-    setFilter(atribut); // Setează filtrul selectat
-    try {
-      const response = await axios.get(`http://localhost:8080/api/atribute/locatii?numeAtribut=${atribut}`);
-      setLocatii(response.data); // Actualizează locațiile în funcție de atribut
-    } catch (error) {
-      console.error("Eroare la preluarea locațiilor filtrate:", error);
+    if (atribut === '') {
+      // Dacă se apasă pe butonul "Toate", încarcă toate locațiile
+      try {
+        const response = await axios.get('http://localhost:8080/api/locatii');
+        setLocatii(response.data); // Încarcă toate locațiile
+      } catch (error) {
+        console.error("Eroare la preluarea locațiilor:", error);
+      }
+    } else {
+      // Dacă se apasă pe un buton de filtru, încarcă locațiile pe baza atributului selectat
+      setFilter(atribut); // Setează filtrul selectat
+      try {
+        const response = await axios.get(`http://localhost:8080/api/atribute/locatii?numeAtribut=${atribut}`);
+        setLocatii(response.data); // Actualizează locațiile în funcție de atribut
+      } catch (error) {
+        console.error("Eroare la preluarea locațiilor filtrate:", error);
+      }
     }
   };
 
@@ -120,7 +131,7 @@ const Harta = () => {
             {atribut.nume}
           </Button>
         ))}
-        <Button onClick={() => setFilter('')}>Toate</Button> {/* Resetare filtru */}
+        <Button onClick={() => handleFilterChange('')}>Toate</Button> {/* Resetare filtru */}
       </ButtonContainer>
       <h3>Filtrul activ: {filter || "Niciunul"}</h3> {/* Afișează filtru selectat */}
 
