@@ -101,8 +101,15 @@ const Harta = () => {
     fetchAtribute();
   }, []);
 
-  const handleFilterChange = (atribut) => {
+  // Funcția pentru a actualiza locațiile pe baza filtrului
+  const handleFilterChange = async (atribut) => {
     setFilter(atribut); // Setează filtrul selectat
+    try {
+      const response = await axios.get(`http://localhost:8080/api/atribute/locatii?numeAtribut=${atribut}`);
+      setLocatii(response.data); // Actualizează locațiile în funcție de atribut
+    } catch (error) {
+      console.error("Eroare la preluarea locațiilor filtrate:", error);
+    }
   };
 
   return (
@@ -116,15 +123,12 @@ const Harta = () => {
         <Button onClick={() => setFilter('')}>Toate</Button> {/* Resetare filtru */}
       </ButtonContainer>
 
-      <MapContainer center={[44.4268, 26.1025]} zoom={13} scrollWheelZoom={false} style={{ height: "100%", width: "100%" }}>
+      <MapContainer center={[44.4268, 26.1025]} zoom={13} scrollWheelZoom={false} style={{ height: "100%", width: "100%", position: "relative" }}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {Array.isArray(locatii) && locatii.filter((locatie) => {
-          // Aplicarea filtrului selectat
-          return filter ? locatie.tipLocatie?.nume === filter : true;
-        }).map((locatie) => {
+        {Array.isArray(locatii) && locatii.map((locatie) => {
           const locatieRecenzii = recenzii.filter(recenzie => recenzie.locatie && recenzie.locatie.id === locatie.id);
 
           return (
