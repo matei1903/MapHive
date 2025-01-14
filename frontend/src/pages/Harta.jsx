@@ -122,6 +122,7 @@ const Harta = () => {
         ))}
         <Button onClick={() => setFilter('')}>Toate</Button> {/* Resetare filtru */}
       </ButtonContainer>
+      <h3>Filtrul activ: {filter || "Niciunul"}</h3> {/* Afișează filtru selectat */}
 
       <MapContainer center={[44.4268, 26.1025]} zoom={13} scrollWheelZoom={false} style={{ height: "100%", width: "100%", position: "relative" }}>
         <TileLayer
