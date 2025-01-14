@@ -73,7 +73,7 @@ const Harta = () => {
       try {
         const response = await axios.get('https://c6c3-86-124-206-15.ngrok-free.app/api/locatii', {
           headers: {
-            "User-Agent": "CustomAgent/1.0"
+            "ngrok-skip-browser-warning": "true"
           }
         });
         setLocatii(response.data);
