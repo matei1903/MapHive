@@ -221,13 +221,32 @@ const Harta = () => {
   const handleSubmitReview = async () => {
     if (rating && comentariu) {
       try {
+        // Obține utilizatorul ID din localStorage
+        const utilizatorId = localStorage.getItem('utilizatorId');
+        
+        // Verifică dacă ID-ul există și este valid
+        if (!utilizatorId) {
+          alert("ID-ul utilizatorului nu a fost găsit în localStorage!");
+          return;
+        }
+  
+        const locatieId = selectedLocatie.id;  // ID-ul locației selectate
+  
         const response = await axios.post(
-          `https://d466-86-124-206-15.ngrok-free.app/api/recenzii/adauga/%7ButilizatorId%7D`, {
+          `https://d466-86-124-206-15.ngrok-free.app/api/recenzii/adauga/${utilizatorId}`, {
+            locatieId: locatieId,
+            rating: rating,
+            comentariu: comentariu
+          }, {
             headers: {
               "ngrok-skip-browser-warning": "true"
             }
           });
-        setRecenzii([...recenzii, response.data]);  // Adăugăm recenzia nouă la lista locală
+        
+        // Actualizează lista de recenzii cu recenzia adăugată
+        setRecenzii([...recenzii, response.data]);
+        
+        // Resetează valorile inputurilor
         setRating(0);
         setComentariu('');
       } catch (error) {
@@ -237,6 +256,7 @@ const Harta = () => {
       alert("Te rog completează ratingul și comentariul!");
     }
   };
+  
   
 
   return (
