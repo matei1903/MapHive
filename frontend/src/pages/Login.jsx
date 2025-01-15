@@ -21,18 +21,21 @@ const Login = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          "ngrok-skip-browser-warning": "true"
         },
         body: JSON.stringify(payload),
       });
 
       const result = await response.json(); // Așteaptă răspunsul ca JSON
+      console.log("Răspuns server:", result);  // Verificăm răspunsul serverului
 
       if (result.success) {
         // Salvează ID-ul utilizatorului în localStorage
         localStorage.setItem('utilizatorId', result.utilizatorId);
 
-        // Navighează către pagina "harta"
-        navigate('/harta');
+        // Verificăm înainte să navigăm
+        console.log("Navighez către /harta...");
+        navigate('/harta');  // Navigare către /harta
       } else {
         // Afișează mesajul de eroare din răspunsul serverului
         setError(result.message);
