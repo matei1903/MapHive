@@ -128,6 +128,45 @@ const CloseButton = styled.button`
   }
 `;
 
+const SideMenu = styled.div`
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background-color: white;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: width 0.3s ease;
+  width: ${({ isOpen }) => (isOpen ? "200px" : "60px")};
+  display: flex;
+  flex-direction: column;
+  align-items: ${({ isOpen }) => (isOpen ? "flex-start" : "center")};
+  padding: ${({ isOpen }) => (isOpen ? "10px" : "0")};
+`;
+
+const SideMenuButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  margin: 5px 0;
+  display: flex;
+  align-items: center;
+  justify-content: ${({ isOpen }) => (isOpen ? "flex-start" : "center")};
+  color: #333;
+  font-size: 16px;
+  width: 100%;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+
+  img {
+    width: 20px;
+    height: 20px;
+    margin-right: ${({ isOpen }) => (isOpen ? "10px" : "0")};
+  }
+`;
+
 const customMarkerIcon = new L.Icon({
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
   iconSize: [30, 45],
@@ -145,6 +184,7 @@ const Harta = () => {
   const [selectedLocatie, setSelectedLocatie] = useState(null);
   const [rating, setRating] = useState(0);
   const [comentariu, setComentariu] = useState('');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     const fetchLocatii = async () => {
@@ -261,6 +301,31 @@ const Harta = () => {
 
   return (
     <Container>
+      <SideMenu isOpen={isMenuOpen}>
+        <SideMenuButton isOpen={isMenuOpen} onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          <img src="https://via.placeholder.com/20" alt="Menu" />
+          {isMenuOpen && <span>Meniu</span>}
+        </SideMenuButton>
+
+        <SideMenuButton
+          isOpen={isMenuOpen}
+          onClick={() => window.location.href = "/locatii"}
+        >
+          <img src="https://via.placeholder.com/20" alt="Save" />
+          {isMenuOpen && <span>Salvat</span>}
+        </SideMenuButton>
+
+        <SideMenuButton
+          isOpen={isMenuOpen}
+          onClick={() => {
+            localStorage.clear();
+            window.location.href = "/login";
+          }}
+        >
+          <img src="https://via.placeholder.com/20" alt="Logout" />
+          {isMenuOpen && <span>Delogare</span>}
+        </SideMenuButton>
+      </SideMenu>
       <ButtonContainer>
         {atribute.map((atribut) => (
           <Button
@@ -287,7 +352,7 @@ const Harta = () => {
         </Button>
       </ButtonContainer>
 
-      <MapContainer center={[44.4268, 26.1025]} zoom={13} scrollWheelZoom={false} style={{ height: "100vh", width: "100vw" }}>
+      <MapContainer center={[44.4268, 26.1025]} zoom={13} scrollWheelZoom={true} style={{ height: "100vh", width: "100vw" }}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
