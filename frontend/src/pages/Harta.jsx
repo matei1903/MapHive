@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import styled from "styled-components";
@@ -18,19 +18,21 @@ const Container = styled.div`
 
 const ButtonContainer = styled.div`
   position: absolute;
-  top: 10%;
-  left: 10%;
+  top: 2%;
+  left: 4%;
   z-index: 1000;
   display: flex;
   flex-direction: row; /* Butoanele pe linie */
+  flex-wrap: wrap;
   gap: 10px;
+  width: calc(100% - 20px);
 `;
 
 const Button = styled.button`
   background-color: #fff;
   color: #333;
   border: 1px solid #ccc;
-  padding: 8px 20px;
+  padding: 6px 12px;
   border-radius: 50px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
@@ -53,6 +55,30 @@ const Button = styled.button`
   }
 `;
 
+const PopupContainer = styled.div`
+  position: absolute;
+  top: 10%;
+  right: 10px;
+  width: 350px;  // Lățime mai mare
+  height: 70vh;  // Înălțime mai mare
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  overflow-y: auto;  // Adaugă scroll dacă conținutul depășește înălțimea
+  z-index: 1000;
+`;
+
+const PopupTitle = styled.h3`
+  margin-top: 0;
+`;
+
+const PopupContent = styled.div`
+  font-size: 14px;
+  line-height: 1.5;
+`;
+
+
 const customMarkerIcon = new L.Icon({
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
   iconSize: [30, 45],
@@ -67,6 +93,7 @@ const Harta = () => {
   const [recenzii, setRecenzii] = useState([]);
   const [atribute, setAtribute] = useState([]);
   const [filters, setFilters] = useState([]);
+  const [selectedLocatie, setSelectedLocatie] = useState(null);
 
   useEffect(() => {
     const fetchLocatii = async () => {
@@ -182,30 +209,33 @@ const Harta = () => {
               key={locatie.id}
               position={[locatie.latitudine, locatie.longitudine]}
               icon={customMarkerIcon}
-            >
-              <Popup>
-                <strong>{locatie.locatie_nume}</strong><br />
-                <em>{locatie.locatie_adresa}</em><br />
-                {locatie.descriere}<br />
-                <strong>Tip:</strong> {locatie.tipLocatie?.nume}<br />
-                <strong>Recenzii:</strong>
-                <ul>
-                  {locatieRecenzii.length > 0 ? (
-                    locatieRecenzii.map((recenzie, index) => (
-                      <li key={index}>
-                        <strong>Rating:</strong> {recenzie.rating}/5<br />
-                        <strong>Comentariu:</strong> {recenzie.comentariu}
-                      </li>
-                    ))
-                  ) : (
-                    <li>Nu există recenzii disponibile.</li>
-                  )}
-                </ul>
-              </Popup>
-            </Marker>
+              eventHandlers={{
+                click: () => setSelectedLocatie(locatie)
+              }}
+            />
           );
         })}
       </MapContainer>
+
+      {selectedLocatie && (
+        <PopupContainer>
+          <PopupTitle>{selectedLocatie.locatie_nume}</PopupTitle>
+          <PopupContent>
+            <strong>Adresă:</strong> {selectedLocatie.locatie_adresa}<br />
+            <strong>Descriere:</strong> {selectedLocatie.descriere}<br />
+            <strong>Tip:</strong> {selectedLocatie.tipLocatie?.nume}<br />
+            <strong>Recenzii:</strong>
+            <ul>
+              {recenzii.filter(recenzie => recenzie.locatie.id === selectedLocatie.id).map((recenzie, index) => (
+                <li key={index}>
+                  <strong>Rating:</strong> {recenzie.rating}/5<br />
+                  <strong>Comentariu:</strong> {recenzie.comentariu}
+                </li>
+              ))}
+            </ul>
+          </PopupContent>
+        </PopupContainer>
+      )}
     </Container>
   );
 };
