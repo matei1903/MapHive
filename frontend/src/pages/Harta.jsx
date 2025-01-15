@@ -202,7 +202,7 @@ const Harta = () => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {Array.isArray(locatii) && locatii.map((locatie) => {
-          const locatieRecenzii = recenzii.filter(recenzie => recenzie.locatie && recenzie.locatie.id === locatie.id);
+          //const locatieRecenzii = recenzii.filter(recenzie => recenzie.locatie && recenzie.locatie.id === locatie.id);
 
           return (
             <Marker
