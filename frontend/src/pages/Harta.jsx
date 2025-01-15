@@ -70,6 +70,33 @@ const PopupContainer = styled.div`
   color: black;
 `;
 
+const FormContainer = styled.div`
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+const Input = styled.input`
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+`;
+
+const SubmitButton = styled.button`
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
 const PopupTitle = styled.h3`
   margin-top: 0;
 `;
@@ -108,6 +135,8 @@ const Harta = () => {
   const [atribute, setAtribute] = useState([]);
   const [filters, setFilters] = useState([]);
   const [selectedLocatie, setSelectedLocatie] = useState(null);
+  const [rating, setRating] = useState(0);
+  const [comentariu, setComentariu] = useState('');
 
   useEffect(() => {
     const fetchLocatii = async () => {
@@ -181,6 +210,28 @@ const Harta = () => {
     }
   };
   
+  const handleSubmitReview = async () => {
+    if (rating && comentariu) {
+      try {
+        const response = await axios.post(
+          `http://localhost:8080/api/recenzii/adauga/1`,  // Presupunând că 1 este utilizatorul
+          {
+            utilizatorId: 1,  // Exemplu de utilizator
+            locatieId: selectedLocatie.id,
+            rating,
+            comentariu
+          }
+        );
+        setRecenzii([...recenzii, response.data]);  // Adăugăm recenzia nouă la lista locală
+        setRating(0);
+        setComentariu('');
+      } catch (error) {
+        console.error("Eroare la adăugarea recenziei:", error);
+      }
+    } else {
+      alert("Te rog completează ratingul și comentariul!");
+    }
+  };
   
 
   return (
@@ -248,6 +299,23 @@ const Harta = () => {
               ))}
             </ul>
           </PopupContent>
+          <FormContainer>
+            <Input
+              type="number"
+              value={rating}
+              onChange={(e) => setRating(e.target.value)}
+              placeholder="Rating (1-5)"
+              min="1"
+              max="5"
+            />
+            <TextArea
+              value={comentariu}
+              onChange={(e) => setComentariu(e.target.value)}
+              placeholder="Comentariu"
+              rows="4"
+            />
+            <SubmitButton onClick={handleSubmitReview}>Trimite Recenzie</SubmitButton>
+          </FormContainer>
         </PopupContainer>
       )}
     </Container>
