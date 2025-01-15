@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, useMapEvents, Popup } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import styled from "styled-components";
@@ -177,6 +177,97 @@ const customMarkerIcon = new L.Icon({
   shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
   shadowSize: [40, 40],
 });
+
+const newMarkerIcon = new L.Icon({
+  iconUrl: "https://cdn-icons-png.flaticon.com/512/854/854866.png",
+  iconSize: [30, 45],
+  iconAnchor: [15, 45],
+  popupAnchor: [0, -40],
+});
+
+const AddLocationMarker = ({ setLocatii }) => {
+  const [newLocation, setNewLocation] = useState(null);
+  const [locationData, setLocationData] = useState({
+    nume: "",
+    descriere: "",
+    adresa: "",
+    latitudine: null,
+    longitudine: null,
+  });
+
+  useMapEvents({
+    click(e) {
+      setNewLocation(e.latlng); // Setează poziția markerului nou
+      setLocationData((prev) => ({
+        ...prev,
+        latitudine: e.latlng.lat,
+        longitudine: e.latlng.lng,
+      }));
+    },
+  });
+
+  const handleAddLocation = async () => {
+    if (locationData.nume && locationData.descriere && locationData.adresa) {
+      try {
+        const utilizatorId = localStorage.getItem("utilizatorId");
+        if (!utilizatorId) {
+          alert("Te rugăm să te autentifici pentru a adăuga o locație!");
+          return;
+        }
+
+        const response = await axios.post(
+          "http://localhost:8080/api/locatii-utilizator/adaugare",
+          { ...locationData, utilizatorId: parseInt(utilizatorId) },
+          { headers: { "ngrok-skip-browser-warning": "true" } }
+        );
+
+        setLocatii((prev) => [...prev, response.data]); // Actualizează lista locațiilor
+        setNewLocation(null); // Resetează markerul temporar
+        alert("Locația a fost adăugată cu succes!");
+      } catch (error) {
+        console.error("Eroare la adăugarea locației:", error);
+        alert("A apărut o eroare. Te rugăm să încerci din nou!");
+      }
+    } else {
+      alert("Te rugăm să completezi toate câmpurile!");
+    }
+  };
+
+  return newLocation ? (
+    <Marker position={newLocation} icon={newMarkerIcon}>
+      <Popup>
+        <FormContainer>
+          <Input
+            type="text"
+            placeholder="Nume locație"
+            value={locationData.nume}
+            onChange={(e) =>
+              setLocationData({ ...locationData, nume: e.target.value })
+            }
+          />
+          <Input
+            type="text"
+            placeholder="Adresă"
+            value={locationData.adresa}
+            onChange={(e) =>
+              setLocationData({ ...locationData, adresa: e.target.value })
+            }
+          />
+          <TextArea
+            placeholder="Descriere"
+            value={locationData.descriere}
+            onChange={(e) =>
+              setLocationData({ ...locationData, descriere: e.target.value })
+            }
+          />
+          <SubmitButton onClick={handleAddLocation}>
+            Adaugă locația
+          </SubmitButton>
+        </FormContainer>
+      </Popup>
+    </Marker>
+  ) : null;
+};
 
 const Harta = () => {
   const [locatii, setLocatii] = useState([]);
@@ -373,6 +464,7 @@ const Harta = () => {
             />
           );
         })}
+        <AddLocationMarker setLocatii={setLocatii} />
       </MapContainer>
 
       {selectedLocatie && (
