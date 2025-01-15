@@ -126,36 +126,6 @@ const Harta = () => {
     fetchAtribute();
   }, []);
 
-  // Funcția pentru a actualiza locațiile pe baza filtrului
-  const handleFilterChange = async (atribut) => {
-    if (atribut === '') {
-      // Dacă se apasă pe butonul "Toate", încarcă toate locațiile
-      try {
-        const response = await axios.get('https://d466-86-124-206-15.ngrok-free.app/api/locatii', {
-          headers: {
-            "ngrok-skip-browser-warning": "true"
-          }
-        });
-        setLocatii(response.data); // Încarcă toate locațiile
-      } catch (error) {
-        console.error("Eroare la preluarea locațiilor:", error);
-      }
-    } else {
-      // Dacă se apasă pe un buton de filtru, încarcă locațiile pe baza atributului selectat
-      setFilter(atribut); // Setează filtrul selectat
-      try {
-        const response = await axios.get(`https://d466-86-124-206-15.ngrok-free.app/api/atribute/locatii?numeAtribut=${atribut}`, {
-          headers: {
-            "ngrok-skip-browser-warning": "true"
-          }
-        });
-        setLocatii(response.data); // Actualizează locațiile în funcție de atribut
-      } catch (error) {
-        console.error("Eroare la preluarea locațiilor filtrate:", error);
-      }
-    }
-  };
-
   const handleSearchChange = async (e) => {
     const query = e.target.value;
     setSearch(query);
@@ -173,6 +143,12 @@ const Harta = () => {
         console.error("Eroare la căutarea locațiilor:", error);
       }
     } else {
+      fetchFilteredLocations(filter);
+    }
+  };
+
+  const fetchFilteredLocations = async (atribut) => {
+    if (atribut === '') {
       try {
         const response = await axios.get('https://d466-86-124-206-15.ngrok-free.app/api/locatii', {
           headers: {
@@ -181,9 +157,25 @@ const Harta = () => {
         });
         setLocatii(response.data);
       } catch (error) {
-        console.error("Eroare la reîncărcarea locațiilor:", error);
+        console.error("Eroare la preluarea locațiilor:", error);
+      }
+    } else {
+      try {
+        const response = await axios.get(`https://d466-86-124-206-15.ngrok-free.app/api/atribute/locatii?numeAtribut=${atribut}`, {
+          headers: {
+            "ngrok-skip-browser-warning": "true"
+          }
+        });
+        setLocatii(response.data);
+      } catch (error) {
+        console.error("Eroare la preluarea locațiilor filtrate:", error);
       }
     }
+  };
+
+  const handleFilterChange = (atribut) => {
+    setFilter(atribut);
+    fetchFilteredLocations(atribut);
   };
 
   return (
