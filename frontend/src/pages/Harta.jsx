@@ -22,7 +22,7 @@ const ButtonContainer = styled.div`
   left: 10%;
   z-index: 1000;
   display: flex;
-  flex-direction: column;
+  flex-direction: row; /* Butoanele pe linie */
   gap: 10px;
 `;
 
@@ -66,7 +66,7 @@ const Harta = () => {
   const [locatii, setLocatii] = useState([]);
   const [recenzii, setRecenzii] = useState([]);
   const [atribute, setAtribute] = useState([]);
-  const [filters, setFilters] = useState([]); // Multiple filters state
+  const [filters, setFilters] = useState([]);
 
   useEffect(() => {
     const fetchLocatii = async () => {
@@ -116,15 +116,13 @@ const Harta = () => {
   const handleFilterChange = (atribut) => {
     let newFilters;
     if (filters.includes(atribut)) {
-      newFilters = filters.filter((filter) => filter !== atribut); // Remove filter if already selected
+      newFilters = filters.filter((filter) => filter !== atribut);
     } else {
-      newFilters = [...filters, atribut]; // Add filter if not selected
+      newFilters = [...filters, atribut];
     }
     setFilters(newFilters);
-  
-    // If no filter is selected, show all locations
+
     if (newFilters.length === 0) {
-      // Directly make the request to get all locations
       axios.get('https://d466-86-124-206-15.ngrok-free.app/api/locatii', {
         headers: {
           "ngrok-skip-browser-warning": "true"
@@ -133,7 +131,6 @@ const Harta = () => {
       .then(response => setLocatii(response.data))
       .catch(error => console.error("Eroare la preluarea locațiilor:", error));
     } else {
-      // Otherwise, fetch filtered locations
       axios.get(`https://d466-86-124-206-15.ngrok-free.app/api/atribute/locatii?numeAtribut=${newFilters.join(',')}`, {
         headers: {
           "ngrok-skip-browser-warning": "true"
@@ -157,7 +154,16 @@ const Harta = () => {
           </Button>
         ))}
         <Button
-          onClick={() => setFilters([])} // Clear all filters
+          onClick={() => {
+            setFilters([]);
+            axios.get('https://d466-86-124-206-15.ngrok-free.app/api/locatii', {
+              headers: {
+                "ngrok-skip-browser-warning": "true"
+              }
+            })
+            .then(response => setLocatii(response.data))
+            .catch(error => console.error("Eroare la preluarea locațiilor:", error));
+          }}
         >
           Toate
         </Button>
