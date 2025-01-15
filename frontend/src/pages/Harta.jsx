@@ -106,6 +106,14 @@ const PopupContent = styled.div`
   line-height: 1.5;
 `;
 
+const TextArea = styled.textarea`
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+`;
+
 const CloseButton = styled.button`
   position: absolute;
   top: 10px;
