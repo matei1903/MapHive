@@ -216,7 +216,7 @@ const AddLocationMarker = ({ setLocatii }) => {
         }
 
         const response = await axios.post(
-          "http://localhost:8080/api/locatii-utilizator/adaugare",
+          "https://d466-86-124-206-15.ngrok-free.app/api/locatii-utilizator/adaugare",
           { ...locationData, utilizatorId: parseInt(utilizatorId) },
           { headers: { "ngrok-skip-browser-warning": "true" } }
         );
