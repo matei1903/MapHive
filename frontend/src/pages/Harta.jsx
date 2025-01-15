@@ -162,7 +162,8 @@ const Harta = () => {
       newFilters = [...filters, atribut];
     }
     setFilters(newFilters);
-
+  
+    // După actualizarea filtrelor, se face filtrarea locațiilor pe client
     if (newFilters.length === 0) {
       axios.get('https://d466-86-124-206-15.ngrok-free.app/api/locatii', {
         headers: {
@@ -172,13 +173,11 @@ const Harta = () => {
       .then(response => setLocatii(response.data))
       .catch(error => console.error("Eroare la preluarea locațiilor:", error));
     } else {
-      axios.get(`https://d466-86-124-206-15.ngrok-free.app/api/atribute/locatii?numeAtribut=${newFilters.join(',')}`, {
-        headers: {
-          "ngrok-skip-browser-warning": "true"
-        }
-      })
-      .then(response => setLocatii(response.data))
-      .catch(error => console.error("Eroare la preluarea locațiilor filtrate:", error));
+      // Filtrarea locațiilor care au oricare dintre atributele selectate
+      const locatiiFiltrate = locatii.filter(locatie =>
+        locatie.atribute.some(atributLocatie => newFilters.includes(atributLocatie))
+      );
+      setLocatii(locatiiFiltrate);
     }
   };
 
