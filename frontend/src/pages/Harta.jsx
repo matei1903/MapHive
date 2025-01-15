@@ -185,7 +185,7 @@ const Harta = () => {
   const [selectedLocatie, setSelectedLocatie] = useState(null);
   const [rating, setRating] = useState(0);
   const [comentariu, setComentariu] = useState('');
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(true);
   const navigate = useNavigate();
 
 
