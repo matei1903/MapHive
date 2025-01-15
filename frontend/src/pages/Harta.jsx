@@ -23,7 +23,7 @@ const ButtonContainer = styled.div`
   position: absolute;
   top: 10%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%); /* Center the buttons horizontally */
   z-index: 1000;
   display: flex;
   gap: 10px;
@@ -41,28 +41,14 @@ const Button = styled.button`
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
-
   &:hover {
     background-color: #007bff;
     color: white;
     transform: scale(1.05);
   }
-
   &:focus {
     outline: none;
   }
-`;
-
-const SearchInput = styled.input`
-  position: absolute;
-  top: 5%;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1000;
-  padding: 8px 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.25);
 `;
 
 const customMarkerIcon = new L.Icon({
@@ -77,9 +63,8 @@ const customMarkerIcon = new L.Icon({
 const Harta = () => {
   const [locatii, setLocatii] = useState([]);
   const [recenzii, setRecenzii] = useState([]);
-  const [atribute, setAtribute] = useState([]);
-  const [filter, setFilter] = useState('');
-  const [search, setSearch] = useState('');
+  const [atribute, setAtribute] = useState([]); // State pentru atributele de filtrare
+  const [filter, setFilter] = useState(''); // Filtrul selectat
 
   useEffect(() => {
     const fetchLocatii = async () => {
@@ -126,62 +111,49 @@ const Harta = () => {
     fetchAtribute();
   }, []);
 
+  // Funcția pentru a actualiza locațiile pe baza filtrului
   const handleFilterChange = async (atribut) => {
-    setFilter(atribut);
-    try {
-      const response = await axios.get(atribut 
-        ? `https://d466-86-124-206-15.ngrok-free.app/api/atribute/locatii?numeAtribut=${atribut}` 
-        : 'https://d466-86-124-206-15.ngrok-free.app/api/locatii', {
-        headers: {
-          "ngrok-skip-browser-warning": "true"
-        }
-      });
-      setLocatii(response.data);
-    } catch (error) {
-      console.error("Eroare la preluarea locațiilor filtrate:", error);
-    }
-  };
-
-  const handleSearchChange = async (e) => {
-    const query = e.target.value;
-    setSearch(query);
-
-    if (query) {
+    if (atribut === '') {
+      // Dacă se apasă pe butonul "Toate", încarcă toate locațiile
       try {
-        const response = await axios.get(`https://d466-86-124-206-15.ngrok-free.app/api/locatii/locatii-nume`, {
-          params: { nume: query },
+        const response = await axios.get('https://d466-86-124-206-15.ngrok-free.app/api/locatii', {
           headers: {
             "ngrok-skip-browser-warning": "true"
           }
         });
-        setLocatii(response.data);
+        setLocatii(response.data); // Încarcă toate locațiile
       } catch (error) {
-        console.error("Eroare la căutarea locațiilor:", error);
+        console.error("Eroare la preluarea locațiilor:", error);
       }
     } else {
-      handleFilterChange(filter); // Reaplică filtrul curent
+      // Dacă se apasă pe un buton de filtru, încarcă locațiile pe baza atributului selectat
+      setFilter(atribut); // Setează filtrul selectat
+      try {
+        const response = await axios.get(`https://d466-86-124-206-15.ngrok-free.app/api/atribute/locatii?numeAtribut=${atribut}`, {
+          headers: {
+            "ngrok-skip-browser-warning": "true"
+          }
+        });
+        setLocatii(response.data); // Actualizează locațiile în funcție de atribut
+      } catch (error) {
+        console.error("Eroare la preluarea locațiilor filtrate:", error);
+      }
     }
   };
 
   return (
     <Container>
-      <SearchInput
-        type="text"
-        placeholder="Caută locații după nume..."
-        value={search}
-        onChange={handleSearchChange}
-      />
       <ButtonContainer>
         {atribute.map((atribut) => (
           <Button key={atribut.id} onClick={() => handleFilterChange(atribut.nume)}>
             {atribut.nume}
           </Button>
         ))}
-        <Button onClick={() => handleFilterChange('')}>Toate</Button>
+        <Button onClick={() => handleFilterChange('')}>Toate</Button> {/* Resetare filtru */}
       </ButtonContainer>
-      <h3>Filtrul activ: {filter || "Niciunul"}</h3>
+      <h3>Filtrul activ: {filter || "Niciunul"}</h3> {/* Afișează filtru selectat */}
 
-      <MapContainer center={[44.4268, 26.1025]} zoom={13} scrollWheelZoom={false} style={{ height: "100%", width: "100%" }}>
+      <MapContainer center={[44.4268, 26.1025]} zoom={13} scrollWheelZoom={false} style={{ height: "100%", width: "100%", position: "relative" }}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
