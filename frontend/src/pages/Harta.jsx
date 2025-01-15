@@ -22,7 +22,7 @@ const ButtonContainer = styled.div`
   left: 4%;
   z-index: 1000;
   display: flex;
-  flex-direction: row; /* Butoanele pe linie */
+  flex-direction: row;
   flex-wrap: wrap;
   gap: 10px;
   width: calc(100% - 20px);
@@ -59,14 +59,15 @@ const PopupContainer = styled.div`
   position: absolute;
   top: 10%;
   right: 10px;
-  width: 350px;  // Lățime mai mare
-  height: 70vh;  // Înălțime mai mare
+  width: 350px;
+  height: 70vh;
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  overflow-y: auto;  // Adaugă scroll dacă conținutul depășește înălțimea
+  overflow-y: auto;
   z-index: 1000;
+  color: black;
 `;
 
 const PopupTitle = styled.h3`
@@ -78,6 +79,19 @@ const PopupContent = styled.div`
   line-height: 1.5;
 `;
 
+const CloseButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #333;
+  &:hover {
+    color: #007bff;
+  }
+`;
 
 const customMarkerIcon = new L.Icon({
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
@@ -202,8 +216,6 @@ const Harta = () => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {Array.isArray(locatii) && locatii.map((locatie) => {
-          //const locatieRecenzii = recenzii.filter(recenzie => recenzie.locatie && recenzie.locatie.id === locatie.id);
-
           return (
             <Marker
               key={locatie.id}
@@ -219,6 +231,7 @@ const Harta = () => {
 
       {selectedLocatie && (
         <PopupContainer>
+          <CloseButton onClick={() => setSelectedLocatie(null)}>&times;</CloseButton>
           <PopupTitle>{selectedLocatie.locatie_nume}</PopupTitle>
           <PopupContent>
             <strong>Adresă:</strong> {selectedLocatie.locatie_adresa}<br />
