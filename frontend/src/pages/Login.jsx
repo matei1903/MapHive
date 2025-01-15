@@ -29,12 +29,12 @@ const Login = () => {
       const result = await response.json(); // Așteaptă răspunsul ca JSON
       console.log("Răspuns server:", result);  // Verificăm răspunsul serverului
 
-      if (result.success) {
+      // Verifică dacă autentificarea a fost reușită pe baza mesajului
+      if (result.message === 'Autentificare reușită!') {
         // Salvează ID-ul utilizatorului în localStorage
-        localStorage.setItem('utilizatorId', result.utilizatorId);
+        localStorage.setItem('utilizatorId', result.id);  // Folosim 'id' în loc de 'utilizatorId'
 
-        // Verificăm înainte să navigăm
-        console.log("Navighez către /harta...");
+        // Navighează către pagina "harta"
         navigate('/harta');  // Navigare către /harta
       } else {
         // Afișează mesajul de eroare din răspunsul serverului
