@@ -188,11 +188,14 @@ const Harta = () => {
         const filteredLocatii = response.data.filter(locatie =>
           newFilters.some(atribut => locatie.atribute && locatie.atribute.includes(atribut))
         );
+        
+        // Actualizăm starea locațiilor
         setLocatii(filteredLocatii);
       })
       .catch(error => console.error("Eroare la preluarea locațiilor filtrate:", error));
     }
   };
+  
   
 
   return (
