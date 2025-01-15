@@ -67,6 +67,7 @@ const Harta = () => {
   const [recenzii, setRecenzii] = useState([]);
   const [atribute, setAtribute] = useState([]); // State pentru atributele de filtrare
   const [filter, setFilter] = useState(''); // Filtrul selectat
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     const fetchLocatii = async () => {
@@ -143,8 +144,44 @@ const Harta = () => {
     }
   };
 
+  const handleSearchChange = async (e) => {
+    const query = e.target.value;
+    setSearch(query);
+
+    if (query) {
+      try {
+        const response = await axios.get(`https://d466-86-124-206-15.ngrok-free.app/api/locatii/locatii-nume`, {
+          params: { nume: query },
+          headers: {
+            "ngrok-skip-browser-warning": "true"
+          }
+        });
+        setLocatii(response.data);
+      } catch (error) {
+        console.error("Eroare la căutarea locațiilor:", error);
+      }
+    } else {
+      try {
+        const response = await axios.get('https://d466-86-124-206-15.ngrok-free.app/api/locatii', {
+          headers: {
+            "ngrok-skip-browser-warning": "true"
+          }
+        });
+        setLocatii(response.data);
+      } catch (error) {
+        console.error("Eroare la reîncărcarea locațiilor:", error);
+      }
+    }
+  };
+
   return (
     <Container>
+       <SearchInput
+        type="text"
+        placeholder="Caută locații după nume..."
+        value={search}
+        onChange={handleSearchChange}
+      />
       <ButtonContainer>
         {atribute.map((atribut) => (
           <Button key={atribut.id} onClick={() => handleFilterChange(atribut.nume)}>
