@@ -142,6 +142,7 @@ const SideMenu = styled.div`
   flex-direction: column;
   align-items: ${({ isOpen }) => (isOpen ? "flex-start" : "center")};
   padding: ${({ isOpen }) => (isOpen ? "10px" : "0")};
+  z-index: 9999;
 `;
 
 const SideMenuButton = styled.button`
