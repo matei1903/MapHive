@@ -6,8 +6,12 @@ import { createGlobalStyle } from "styled-components";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { FirebaseProvider } from "./context/FirebaseContext";
 const Harta = React.lazy(() => import("./pages/Harta"));
+const Register = React.lazy(() => import("./pages/Register"));
+const Login = React.lazy(() => import("./pages/Login"));
 const router = createBrowserRouter([
-  { path: "/", element: <Harta />},
+  { path: "/", element: <Login />},
+  { path: "/harta", element: <Harta />},
+  { path: "/register", element: <Register />},
 ]);
 const GlobalStypes = createGlobalStyle`
   body {
