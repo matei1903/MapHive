@@ -21,16 +21,22 @@ const Login = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          "ngrok-skip-browser-warning": "true"
         },
         body: JSON.stringify(payload),
       });
 
-      const result = await response.text();
+      const result = await response.json(); // Așteaptă răspunsul ca JSON
 
-      if (result === 'Autentificare reușită!') {
+      if (result.success) {
+        // Salvează ID-ul utilizatorului în localStorage
+        localStorage.setItem('utilizatorId', result.utilizatorId);
+
+        // Navighează către pagina "harta"
         navigate('/harta');
       } else {
-        setError(result);
+        // Afișează mesajul de eroare din răspunsul serverului
+        setError(result.message);
       }
     } catch (err) {
       setError('A apărut o eroare. Te rog să încerci din nou.');
