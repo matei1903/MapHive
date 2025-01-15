@@ -71,7 +71,7 @@ const Harta = () => {
   useEffect(() => {
     const fetchLocatii = async () => {
       try {
-        const response = await axios.get('https://c6c3-86-124-206-15.ngrok-free.app/api/locatii', {
+        const response = await axios.get('https://d466-86-124-206-15.ngrok-free.app/api/locatii', {
           headers: {
             "ngrok-skip-browser-warning": "true"
           }
@@ -84,7 +84,11 @@ const Harta = () => {
 
     const fetchRecenzii = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/recenzii');
+        const response = await axios.get('https://d466-86-124-206-15.ngrok-free.app/api/recenzii', {
+          headers: {
+            "ngrok-skip-browser-warning": "true"
+          }
+        });
         setRecenzii(response.data);
       } catch (error) {
         console.error("Eroare la preluarea recenziilor:", error);
@@ -93,7 +97,11 @@ const Harta = () => {
 
     const fetchAtribute = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/atribute');
+        const response = await axios.get('https://d466-86-124-206-15.ngrok-free.app/api/atribute', {
+          headers: {
+            "ngrok-skip-browser-warning": "true"
+          }
+        });
         setAtribute(response.data);
       } catch (error) {
         console.error("Eroare la preluarea atributelor:", error);
@@ -110,7 +118,11 @@ const Harta = () => {
     if (atribut === '') {
       // Dacă se apasă pe butonul "Toate", încarcă toate locațiile
       try {
-        const response = await axios.get('http://localhost:8080/api/locatii');
+        const response = await axios.get('https://d466-86-124-206-15.ngrok-free.app/api/locatii', {
+          headers: {
+            "ngrok-skip-browser-warning": "true"
+          }
+        });
         setLocatii(response.data); // Încarcă toate locațiile
       } catch (error) {
         console.error("Eroare la preluarea locațiilor:", error);
@@ -119,7 +131,11 @@ const Harta = () => {
       // Dacă se apasă pe un buton de filtru, încarcă locațiile pe baza atributului selectat
       setFilter(atribut); // Setează filtrul selectat
       try {
-        const response = await axios.get(`http://localhost:8080/api/atribute/locatii?numeAtribut=${atribut}`);
+        const response = await axios.get(`https://d466-86-124-206-15.ngrok-free.app/api/atribute/locatii?numeAtribut=${atribut}`, {
+          headers: {
+            "ngrok-skip-browser-warning": "true"
+          }
+        });
         setLocatii(response.data); // Actualizează locațiile în funcție de atribut
       } catch (error) {
         console.error("Eroare la preluarea locațiilor filtrate:", error);
