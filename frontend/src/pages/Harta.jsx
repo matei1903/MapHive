@@ -222,14 +222,11 @@ const Harta = () => {
     if (rating && comentariu) {
       try {
         const response = await axios.post(
-          `http://localhost:8080/api/recenzii/adauga/1`,  // Presupunând că 1 este utilizatorul
-          {
-            utilizatorId: 1,  // Exemplu de utilizator
-            locatieId: selectedLocatie.id,
-            rating,
-            comentariu
-          }
-        );
+          `https://d466-86-124-206-15.ngrok-free.app/api/recenzii/adauga/%7ButilizatorId%7D`, {
+            headers: {
+              "ngrok-skip-browser-warning": "true"
+            }
+          });
         setRecenzii([...recenzii, response.data]);  // Adăugăm recenzia nouă la lista locală
         setRating(0);
         setComentariu('');
