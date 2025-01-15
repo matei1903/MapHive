@@ -118,7 +118,11 @@ const Harta = () => {
     if (atribut === '') {
       // Dacă se apasă pe butonul "Toate", încarcă toate locațiile
       try {
-        const response = await axios.get('https://d466-86-124-206-15.ngrok-free.app/api/locatii');
+        const response = await axios.get('https://d466-86-124-206-15.ngrok-free.app/api/locatii', {
+          headers: {
+            "ngrok-skip-browser-warning": "true"
+          }
+        });
         setLocatii(response.data); // Încarcă toate locațiile
       } catch (error) {
         console.error("Eroare la preluarea locațiilor:", error);
