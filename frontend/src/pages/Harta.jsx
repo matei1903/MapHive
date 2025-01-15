@@ -195,6 +195,18 @@ const AddLocationMarker = ({ setLocatii }) => {
     longitudine: null,
   });
 
+  const getAddressFromCoordinates = async (lat, lng) => {
+    try {
+      const response = await axios.get(
+        `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
+      );
+      return response.data.display_name; // Returnează adresa completă
+    } catch (error) {
+      console.error("Eroare la obținerea adresei:", error);
+      return "";
+    }
+  };
+
   useMapEvents({
     click(e) {
       setNewLocation(e.latlng); // Setează poziția markerului nou
@@ -203,8 +215,16 @@ const AddLocationMarker = ({ setLocatii }) => {
         latitudine: e.latlng.lat,
         longitudine: e.latlng.lng,
       }));
+      getAddressFromCoordinates(e.latlng.lat, e.latlng.lng).then((address) => {
+        setLocationData((prev) => ({
+          ...prev,
+          adresa: address, // Setează automat adresa în formular
+        }));
+      });
     },
   });
+
+  
 
   const handleAddLocation = async () => {
     if (locationData.nume && locationData.descriere && locationData.adresa) {
