@@ -25,15 +25,12 @@ const Login = () => {
         body: JSON.stringify(payload),
       });
 
-      const result = await response.json(); // Așteaptă răspunsul ca JSON
+      const result = await response.text();
 
-      if (result.success) {
-        // Salvează ID-ul utilizatorului în localStorage
-        localStorage.setItem('utilizatorId', result.utilizatorId);  // 'utilizatorId' este presupus a fi în răspuns
-
+      if (result === 'Autentificare reușită!') {
         navigate('/harta');
       } else {
-        setError(result.message);  // Dacă serverul returnează un mesaj de eroare
+        setError(result);
       }
     } catch (err) {
       setError('A apărut o eroare. Te rog să încerci din nou.');
