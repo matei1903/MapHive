@@ -53,6 +53,18 @@ const Button = styled.button`
   }
 `;
 
+const SearchInput = styled.input`
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  padding: 8px 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.25);
+`;
+
 const customMarkerIcon = new L.Icon({
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
   iconSize: [30, 45],
