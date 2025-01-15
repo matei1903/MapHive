@@ -23,7 +23,7 @@ const ButtonContainer = styled.div`
   position: absolute;
   top: 10%;
   left: 50%;
-  transform: translateX(-50%); /* Center the buttons horizontally */
+  transform: translateX(-50%);
   z-index: 1000;
   display: flex;
   gap: 10px;
@@ -77,8 +77,8 @@ const customMarkerIcon = new L.Icon({
 const Harta = () => {
   const [locatii, setLocatii] = useState([]);
   const [recenzii, setRecenzii] = useState([]);
-  const [atribute, setAtribute] = useState([]); // State pentru atributele de filtrare
-  const [filter, setFilter] = useState(''); // Filtrul selectat
+  const [atribute, setAtribute] = useState([]);
+  const [filter, setFilter] = useState('');
   const [search, setSearch] = useState('');
 
   useEffect(() => {
@@ -126,6 +126,22 @@ const Harta = () => {
     fetchAtribute();
   }, []);
 
+  const handleFilterChange = async (atribut) => {
+    setFilter(atribut);
+    try {
+      const response = await axios.get(atribut 
+        ? `https://d466-86-124-206-15.ngrok-free.app/api/atribute/locatii?numeAtribut=${atribut}` 
+        : 'https://d466-86-124-206-15.ngrok-free.app/api/locatii', {
+        headers: {
+          "ngrok-skip-browser-warning": "true"
+        }
+      });
+      setLocatii(response.data);
+    } catch (error) {
+      console.error("Eroare la preluarea locațiilor filtrate:", error);
+    }
+  };
+
   const handleSearchChange = async (e) => {
     const query = e.target.value;
     setSearch(query);
@@ -143,44 +159,13 @@ const Harta = () => {
         console.error("Eroare la căutarea locațiilor:", error);
       }
     } else {
-      fetchFilteredLocations(filter);
+      handleFilterChange(filter); // Reaplică filtrul curent
     }
-  };
-
-  const fetchFilteredLocations = async (atribut) => {
-    if (atribut === '') {
-      try {
-        const response = await axios.get('https://d466-86-124-206-15.ngrok-free.app/api/locatii', {
-          headers: {
-            "ngrok-skip-browser-warning": "true"
-          }
-        });
-        setLocatii(response.data);
-      } catch (error) {
-        console.error("Eroare la preluarea locațiilor:", error);
-      }
-    } else {
-      try {
-        const response = await axios.get(`https://d466-86-124-206-15.ngrok-free.app/api/atribute/locatii?numeAtribut=${atribut}`, {
-          headers: {
-            "ngrok-skip-browser-warning": "true"
-          }
-        });
-        setLocatii(response.data);
-      } catch (error) {
-        console.error("Eroare la preluarea locațiilor filtrate:", error);
-      }
-    }
-  };
-
-  const handleFilterChange = (atribut) => {
-    setFilter(atribut);
-    fetchFilteredLocations(atribut);
   };
 
   return (
     <Container>
-       <SearchInput
+      <SearchInput
         type="text"
         placeholder="Caută locații după nume..."
         value={search}
@@ -192,11 +177,11 @@ const Harta = () => {
             {atribut.nume}
           </Button>
         ))}
-        <Button onClick={() => handleFilterChange('')}>Toate</Button> {/* Resetare filtru */}
+        <Button onClick={() => handleFilterChange('')}>Toate</Button>
       </ButtonContainer>
-      <h3>Filtrul activ: {filter || "Niciunul"}</h3> {/* Afișează filtru selectat */}
+      <h3>Filtrul activ: {filter || "Niciunul"}</h3>
 
-      <MapContainer center={[44.4268, 26.1025]} zoom={13} scrollWheelZoom={false} style={{ height: "100%", width: "100%", position: "relative" }}>
+      <MapContainer center={[44.4268, 26.1025]} zoom={13} scrollWheelZoom={false} style={{ height: "100%", width: "100%" }}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
