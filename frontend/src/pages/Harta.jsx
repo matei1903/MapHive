@@ -4,6 +4,7 @@ import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import styled from "styled-components";
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   height: 100%;
@@ -185,6 +186,8 @@ const Harta = () => {
   const [rating, setRating] = useState(0);
   const [comentariu, setComentariu] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     const fetchLocatii = async () => {
@@ -309,7 +312,7 @@ const Harta = () => {
 
         <SideMenuButton
           isOpen={isMenuOpen}
-          onClick={() => window.location.href = "/locatii"}
+          onClick={() => navigate("/locatii")}
         >
           <img src="https://via.placeholder.com/20" alt="Save" />
           {isMenuOpen && <span>Salvat</span>}
