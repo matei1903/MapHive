@@ -24,9 +24,24 @@ const ButtonContainer = styled.div`
   z-index: 1000;
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
   gap: 10px;
-  width: calc(100% - 20px);
+  max-width: 50%; /* Jumătate de ecran */
+  overflow-x: auto; /* Scroll orizontal */
+  white-space: nowrap; /* Împiedică liniile multiple */
+  padding-bottom: 10px; /* Pentru un spațiu mai confortabil */
+  scrollbar-width: thin; /* Stil scrollbar pentru Firefox */
+  scrollbar-color: #ccc #f0f0f0;
+
+  &::-webkit-scrollbar {
+    height: 8px; /* Înălțimea scrollbar-ului */
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #ccc; /* Culoarea thumb-ului */
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f0f0f0; /* Fundalul scrollbar-ului */
+  }
 `;
 
 const Button = styled.button`
