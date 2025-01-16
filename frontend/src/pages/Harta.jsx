@@ -426,7 +426,7 @@ const Harta = () => {
           isOpen={isMenuOpen}
           onClick={() => navigate("/locatii")}
         >
-          <img src="https://via.placeholder.com/20" alt="Save" />
+          <img src={`${process.env.PUBLIC_URL}/bookmark.png`} alt="Save" />
           {isMenuOpen && <span>Salvat</span>}
         </SideMenuButton>
 
