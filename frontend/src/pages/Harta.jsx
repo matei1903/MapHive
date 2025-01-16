@@ -360,23 +360,22 @@ const Harta = () => {
 
   const getRoute = useCallback(async () => {
     if (selectedPoints.length < 2) return;
-
+  
     const apiKey = "5b3ce3597851110001cf624869da1ee21e654fbd8a9ef7211301100c";
     const url = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${selectedPoints[0].lng},${selectedPoints[0].lat}&end=${selectedPoints[1].lng},${selectedPoints[1].lat}`;
-
+  
     try {
       const response = await axios.get(url);
-      const coordinates = response.data.routes[0].geometry.coordinates;
-      const formattedRoute = coordinates.map(([lng, lat]) => ({ lat, lng }));
-      setRoute(formattedRoute);
+      console.log(response.data); // Adaugă log pentru a inspecta structura datelor
+      if (response.data.routes && response.data.routes.length > 0) {
+        const coordinates = response.data.routes[0].geometry.coordinates;
+        const formattedRoute = coordinates.map(([lng, lat]) => ({ lat, lng }));
+        setRoute(formattedRoute);
+      } else {
+        console.error("No route found in response");
+      }
     } catch (error) {
       console.error("Error fetching route:", error);
-    }
-  }, [selectedPoints]);
-
-  useEffect(() => {
-    if (selectedPoints.length === 2) {
-      getRoute();
     }
   }, [selectedPoints, getRoute]);
 
