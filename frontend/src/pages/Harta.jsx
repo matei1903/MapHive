@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { MapContainer, TileLayer, Marker, useMapEvents, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, useMapEvents, Popup, Polyline } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import styled from "styled-components";
@@ -328,7 +328,40 @@ const Harta = () => {
   const navigate = useNavigate();
   const buttonContainerRef = useRef(null);
   const [locatiiUtilizator, setLocatiiUtilizator] = useState([]);
+  const [selectedPoints, setSelectedPoints] = useState([]); // Stochează cele 2 locații selectate
+  const [route, setRoute] = useState([]); // Stochează punctele traseului
 
+  const handleSelectLocation = (lat, lng) => {
+    setSelectedPoints((prev) => {
+      if (prev.length === 2) {
+        return [{ lat, lng }]; // Resetează selecția dacă sunt deja 2 puncte
+      } else {
+        return [...prev, { lat, lng }];
+      }
+    });
+  };
+
+  const getRoute = async () => {
+    if (selectedPoints.length < 2) return;
+  
+    const apiKey = "5b3ce3597851110001cf624869da1ee21e654fbd8a9ef7211301100c"; // Înlocuiește cu cheia ta de OpenRouteService
+    const url = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${selectedPoints[0].lng},${selectedPoints[0].lat}&end=${selectedPoints[1].lng},${selectedPoints[1].lat}`;
+  
+    try {
+      const response = await axios.get(url);
+      const coordinates = response.data.routes[0].geometry.coordinates;
+      const formattedRoute = coordinates.map(([lng, lat]) => ({ lat, lng }));
+      setRoute(formattedRoute);
+    } catch (error) {
+      console.error("Eroare la obținerea traseului:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedPoints.length === 2) {
+      getRoute();
+    }
+  }, [selectedPoints]);
 
   useEffect(() => {
     const fetchLocatiiUtilizator = async () => {
@@ -543,7 +576,10 @@ const Harta = () => {
               position={[locatie.latitudine, locatie.longitudine]}
               icon={customMarkerIcon}
               eventHandlers={{
-                click: () => setSelectedLocatie(locatie)
+                click: () => {
+                  setSelectedLocatie(locatie);
+                  handleSelectLocation(locatie.latitudine, locatie.longitudine);
+                }
               }}
             />
           );
@@ -554,12 +590,16 @@ const Harta = () => {
             position={[locatie.latitudine, locatie.longitudine]}
             icon={customMarkerIconRed}
             eventHandlers={{
-              click: () => setSelectedLocatie(locatie),
+              click: () => {
+                setSelectedLocatie(locatie);
+                handleSelectLocation(locatie.latitudine, locatie.longitudine);
+              }
             }}
           >
           </Marker>
         ))}
         <AddLocationMarker setLocatii={setLocatii} />
+        {route.length > 0 && <Polyline positions={route} color="red" weight={4} />}
       </MapContainer>
 
       {selectedLocatie && (
