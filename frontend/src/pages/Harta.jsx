@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { MapContainer, TileLayer, Marker, useMapEvents, Popup } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
@@ -20,27 +20,27 @@ const Container = styled.div`
 const ButtonContainer = styled.div`
   position: absolute;
   top: 2%;
-  left: 4%;
+  left: 18%;
   z-index: 1000;
   display: flex;
   flex-direction: row;
   gap: 10px;
-  max-width: 50%; /* Jumătate de ecran */
-  overflow-x: auto; /* Scroll orizontal */
-  white-space: nowrap; /* Împiedică liniile multiple */
-  padding-bottom: 10px; /* Pentru un spațiu mai confortabil */
-  scrollbar-width: thin; /* Stil scrollbar pentru Firefox */
+  max-width: 50%;
+  overflow-x: auto; /* Permite scroll pe orizontală */
+  white-space: nowrap;
+  padding-bottom: 10px;
+  scrollbar-width: thin;
   scrollbar-color: #ccc #f0f0f0;
 
   &::-webkit-scrollbar {
-    height: 8px; /* Înălțimea scrollbar-ului */
+    height: 8px;
   }
   &::-webkit-scrollbar-thumb {
-    background: #ccc; /* Culoarea thumb-ului */
+    background: #ccc;
     border-radius: 10px;
   }
   &::-webkit-scrollbar-track {
-    background: #f0f0f0; /* Fundalul scrollbar-ului */
+    background: #f0f0f0;
   }
 `;
 
@@ -200,6 +200,7 @@ const newMarkerIcon = new L.Icon({
   popupAnchor: [0, -40],
 });
 
+
 const AddLocationMarker = ({ setLocatii }) => {
   const [newLocation, setNewLocation] = useState(null);
   const [locationData, setLocationData] = useState({
@@ -268,6 +269,7 @@ const AddLocationMarker = ({ setLocatii }) => {
     }
   };
 
+  
   return newLocation ? (
     <Marker position={newLocation} icon={newMarkerIcon}>
       <Popup>
@@ -314,6 +316,7 @@ const Harta = () => {
   const [comentariu, setComentariu] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const navigate = useNavigate();
+  const buttonContainerRef = useRef(null);
 
 
   useEffect(() => {
@@ -427,7 +430,18 @@ const Harta = () => {
     }
   };
   
-  
+  const handleWheel = (event) => {
+    if (buttonContainerRef.current) {
+      const container = buttonContainerRef.current;
+      const scrollAmount = event.deltaY > 0 ? 100 : -100; // dacă se mișcă rotița în jos sau în sus
+      container.scrollBy({
+        left: scrollAmount,
+        behavior: 'smooth',
+      });
+      event.preventDefault(); // Previne comportamentul implicit al scroll-ului pe verticală
+    }
+  };
+
 
   return (
     <Container>
@@ -456,7 +470,10 @@ const Harta = () => {
           {isMenuOpen && <span>Delogare</span>}
         </SideMenuButton>
       </SideMenu>
-      <ButtonContainer>
+      <ButtonContainer
+      ref={buttonContainerRef}
+      onWheel={handleWheel}
+      >
         {atribute.map((atribut) => (
           <Button
             key={atribut.id}
