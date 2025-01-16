@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { MapContainer, TileLayer, Marker, useMapEvents, Popup, Polyline } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, useMapEvents, Popup } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import styled from "styled-components";
@@ -34,7 +34,6 @@ const ButtonContainer = styled.div`
   padding-bottom: 10px;
   scrollbar-width: thin;
   scrollbar-color: #ccc #f0f0f0;
-
   &::-webkit-scrollbar {
     height: 8px;
   }
@@ -57,18 +56,15 @@ const Button = styled.button`
   transition: background-color 0.3s ease, transform 0.2s ease;
   width: 150px;
   text-align: center;
-
   &:hover {
     background-color: #007bff;
     color: white;
     transform: scale(1.05);
   }
-
   &.active {
     background-color: #007bff;
     color: white;
   }
-
   &:focus {
     outline: none;
   }
@@ -175,32 +171,13 @@ const SideMenuButton = styled.button`
   color: #333;
   font-size: 16px;
   width: 100%;
-
   &:hover {
     background-color: #f0f0f0;
   }
-
   img {
     width: 20px;
     height: 20px;
     margin-right: ${({ isOpen }) => (isOpen ? "10px" : "0")};
-  }
-`;
-
-const RouteButton = styled.button`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 8px;
-  cursor: pointer;
-  z-index: 1000;
-
-  &:hover {
-    background-color: #0056b3;
   }
 `;
 
@@ -345,39 +322,6 @@ const Harta = () => {
   const navigate = useNavigate();
   const buttonContainerRef = useRef(null);
   const [locatiiUtilizator, setLocatiiUtilizator] = useState([]);
-  const [selectedPoints, setSelectedPoints] = useState([]); // Stochează cele 2 locații selectate
-  const [route, setRoute] = useState([]); // Stochează punctele traseului
-
-  const handleSelectLocation = (lat, lng) => {
-    setSelectedPoints((prev) => {
-      if (prev.length === 2) {
-        return [{ lat, lng }]; // Reset if two points are already selected
-      } else {
-        return [...prev, { lat, lng }];
-      }
-    });
-  };
-
-  const getRoute = useCallback(async () => {
-    if (selectedPoints.length < 2) return;
-  
-    const apiKey = "5b3ce3597851110001cf624869da1ee21e654fbd8a9ef7211301100c";
-    const url = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${selectedPoints[0].lng},${selectedPoints[0].lat}&end=${selectedPoints[1].lng},${selectedPoints[1].lat}`;
-  
-    try {
-      const response = await axios.get(url);
-      console.log(response.data); // Adaugă log pentru a inspecta structura datelor
-      if (response.data.routes && response.data.routes.length > 0) {
-        const coordinates = response.data.routes[0].geometry.coordinates;
-        const formattedRoute = coordinates.map(([lng, lat]) => ({ lat, lng }));
-        setRoute(formattedRoute);
-      } else {
-        console.error("No route found in response");
-      }
-    } catch (error) {
-      console.error("Error fetching route:", error);
-    }
-  }, [selectedPoints]);
 
 
   useEffect(() => {
@@ -593,10 +537,7 @@ const Harta = () => {
               position={[locatie.latitudine, locatie.longitudine]}
               icon={customMarkerIcon}
               eventHandlers={{
-                click: () => {
-                  setSelectedLocatie(locatie);
-                  handleSelectLocation(locatie.latitudine, locatie.longitudine);
-                }
+                click: () => setSelectedLocatie(locatie)
               }}
             />
           );
@@ -607,32 +548,20 @@ const Harta = () => {
             position={[locatie.latitudine, locatie.longitudine]}
             icon={customMarkerIconRed}
             eventHandlers={{
-              click: () => {
-                setSelectedLocatie(locatie);
-                handleSelectLocation(locatie.latitudine, locatie.longitudine);
-              }
+              click: () => setSelectedLocatie(locatie),
             }}
           >
           </Marker>
         ))}
         <AddLocationMarker setLocatii={setLocatii} />
-        {route.length > 0 && <Polyline positions={route} color="red" weight={4} />}
       </MapContainer>
-      <RouteButton
-        onClick={() => {
-          setSelectedPoints([]); // Clear the selected points for a new selection
-          alert("Click on two locations to show the route!");
-        }}
-      >
-        Select Locations for Route
-      </RouteButton>
 
       {selectedLocatie && (
         <PopupContainer>
           <CloseButton onClick={() => setSelectedLocatie(null)}>&times;</CloseButton>
           <PopupTitle>{selectedLocatie.locatie_nume || selectedLocatie.nume}</PopupTitle>
           <PopupContent>
-            <strong>Adresă:</strong> {selectedLocatie.locatie_adresa || selectedLocatie.adresa}<br />
+          <strong>Adresă:</strong> {selectedLocatie.locatie_adresa || selectedLocatie.adresa}<br />
             <strong>Descriere:</strong> {selectedLocatie.descriere}<br />
             <strong>Tip:</strong> {selectedLocatie.tipLocatie?.nume}<br />
             <strong>Recenzii:</strong>
