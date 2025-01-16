@@ -341,10 +341,9 @@ const Harta = () => {
     });
   };
 
-  const getRoute = async () => {
+  const getRoute = useCallback(async () => {
     if (selectedPoints.length < 2) return;
-  
-    const apiKey = "5b3ce3597851110001cf624869da1ee21e654fbd8a9ef7211301100c"; // Înlocuiește cu cheia ta de OpenRouteService
+    const apiKey = "5b3ce3597851110001cf624869da1ee21e654fbd8a9ef7211301100c";
     const url = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${selectedPoints[0].lng},${selectedPoints[0].lat}&end=${selectedPoints[1].lng},${selectedPoints[1].lat}`;
   
     try {
@@ -355,7 +354,13 @@ const Harta = () => {
     } catch (error) {
       console.error("Eroare la obținerea traseului:", error);
     }
-  };
+  }, [selectedPoints]);
+  
+  useEffect(() => {
+    if (selectedPoints.length === 2) {
+      getRoute();
+    }
+  }, [selectedPoints, getRoute]);
 
   useEffect(() => {
     if (selectedPoints.length === 2) {
