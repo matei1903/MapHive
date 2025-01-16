@@ -354,13 +354,12 @@ const Harta = () => {
   useEffect(() => {
     const fetchLocatii = async () => {
       try {
-        const [locatiiResponse, locatiiUtilizatorResponse] = await Promise.all([
-          axios.get('https://de9b-86-124-206-15.ngrok-free.app/api/locatii', { headers: { "ngrok-skip-browser-warning": "true" } }),
-          axios.get(`https://de9b-86-124-206-15.ngrok-free.app/api/locatii-utilizator/locatii/utilizator/${localStorage.getItem("utilizatorId")}`, { headers: { "ngrok-skip-browser-warning": "true" } })
-        ]);
-
-        const allLocations = [...locatiiResponse.data, ...locatiiUtilizatorResponse.data];
-        setLocatii(allLocations);
+        const response = await axios.get('https://de9b-86-124-206-15.ngrok-free.app/api/locatii', {
+          headers: {
+            "ngrok-skip-browser-warning": "true"
+          }
+        });
+        setLocatii(response.data);
       } catch (error) {
         console.error("Eroare la preluarea locațiilor:", error);
       }
