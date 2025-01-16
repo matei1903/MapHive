@@ -343,12 +343,13 @@ const Harta = () => {
       const routingControl = L.Routing.control({
         waypoints: [
           L.latLng(startLocation.lat, startLocation.lng),
-          L.latLng(endLocation.lat, endLocation.lng)
+          L.latLng(endLocation.lat, endLocation.lng),
         ],
-        createMarker: function () { return null; } // Nu vrem marker pentru punctele de pe traseu
+        createMarker: function () { return null; }  // Nu vrem marker pentru punctele de pe traseu
       }).addTo(map);
+  
       return () => {
-        map.removeControl(routingControl); // Curățăm ruta atunci când harta se reîncarcă
+        map.removeControl(routingControl);  // Curățăm ruta când componenta se actualizează
       };
     }
   }, [routeVisible, startLocation, endLocation]);
