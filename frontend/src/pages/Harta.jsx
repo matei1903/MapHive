@@ -418,7 +418,7 @@ const Harta = () => {
     <Container>
       <SideMenu isOpen={isMenuOpen}>
         <SideMenuButton isOpen={isMenuOpen} onClick={() => setIsMenuOpen(!isMenuOpen)}>
-          <img src="https://via.placeholder.com/20" alt="Menu" />
+          <img src={`${process.env.PUBLIC_URL}/more.png`} alt="Menu" />
           {isMenuOpen && <span>Meniu</span>}
         </SideMenuButton>
 
@@ -437,7 +437,7 @@ const Harta = () => {
             window.location.href = "/login";
           }}
         >
-          <img src="https://via.placeholder.com/20" alt="Logout" />
+          <img src={`${process.env.PUBLIC_URL}/logout.png`} alt="Logout" />
           {isMenuOpen && <span>Delogare</span>}
         </SideMenuButton>
       </SideMenu>
