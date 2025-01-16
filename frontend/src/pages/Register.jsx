@@ -18,7 +18,7 @@ const Register = () => {
     };
 
     try {
-      const response = await fetch('https://d466-86-124-206-15.ngrok-free.app/api/utilizatori/register', {
+      const response = await fetch('https://9862-86-124-206-15.ngrok-free.app/api/utilizatori/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

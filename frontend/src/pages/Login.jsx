@@ -17,7 +17,7 @@ const Login = () => {
     };
 
     try {
-      const response = await fetch('https://d466-86-124-206-15.ngrok-free.app/api/utilizatori/login', {
+      const response = await fetch('https://9862-86-124-206-15.ngrok-free.app/api/utilizatori/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
