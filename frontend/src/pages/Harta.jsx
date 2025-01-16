@@ -377,7 +377,7 @@ const Harta = () => {
     } catch (error) {
       console.error("Error fetching route:", error);
     }
-  }, [selectedPoints, getRoute]);
+  }, [selectedPoints]);
 
 
   useEffect(() => {
