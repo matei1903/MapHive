@@ -187,6 +187,23 @@ const SideMenuButton = styled.button`
   }
 `;
 
+const RouteButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 1000;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
 const customMarkerIcon = new L.Icon({
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
   iconSize: [30, 45],
@@ -334,7 +351,7 @@ const Harta = () => {
   const handleSelectLocation = (lat, lng) => {
     setSelectedPoints((prev) => {
       if (prev.length === 2) {
-        return [{ lat, lng }]; // Resetează selecția dacă sunt deja 2 puncte
+        return [{ lat, lng }]; // Reset if two points are already selected
       } else {
         return [...prev, { lat, lng }];
       }
@@ -343,19 +360,20 @@ const Harta = () => {
 
   const getRoute = useCallback(async () => {
     if (selectedPoints.length < 2) return;
+
     const apiKey = "5b3ce3597851110001cf624869da1ee21e654fbd8a9ef7211301100c";
     const url = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${selectedPoints[0].lng},${selectedPoints[0].lat}&end=${selectedPoints[1].lng},${selectedPoints[1].lat}`;
-  
+
     try {
       const response = await axios.get(url);
       const coordinates = response.data.routes[0].geometry.coordinates;
       const formattedRoute = coordinates.map(([lng, lat]) => ({ lat, lng }));
       setRoute(formattedRoute);
     } catch (error) {
-      console.error("Eroare la obținerea traseului:", error);
+      console.error("Error fetching route:", error);
     }
   }, [selectedPoints]);
-  
+
   useEffect(() => {
     if (selectedPoints.length === 2) {
       getRoute();
@@ -601,13 +619,21 @@ const Harta = () => {
         <AddLocationMarker setLocatii={setLocatii} />
         {route.length > 0 && <Polyline positions={route} color="red" weight={4} />}
       </MapContainer>
+      <RouteButton
+        onClick={() => {
+          setSelectedPoints([]); // Clear the selected points for a new selection
+          alert("Click on two locations to show the route!");
+        }}
+      >
+        Select Locations for Route
+      </RouteButton>
 
       {selectedLocatie && (
         <PopupContainer>
           <CloseButton onClick={() => setSelectedLocatie(null)}>&times;</CloseButton>
           <PopupTitle>{selectedLocatie.locatie_nume || selectedLocatie.nume}</PopupTitle>
           <PopupContent>
-          <strong>Adresă:</strong> {selectedLocatie.locatie_adresa || selectedLocatie.adresa}<br />
+            <strong>Adresă:</strong> {selectedLocatie.locatie_adresa || selectedLocatie.adresa}<br />
             <strong>Descriere:</strong> {selectedLocatie.descriere}<br />
             <strong>Tip:</strong> {selectedLocatie.tipLocatie?.nume}<br />
             <strong>Recenzii:</strong>
