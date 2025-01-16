@@ -5,7 +5,6 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import styled from "styled-components";
 import { useNavigate } from 'react-router-dom';
-import 'leaflet-routing-machine';
 
 const Container = styled.div`
   height: 100%;
@@ -323,36 +322,7 @@ const Harta = () => {
   const navigate = useNavigate();
   const buttonContainerRef = useRef(null);
   const [locatiiUtilizator, setLocatiiUtilizator] = useState([]);
-  const [routeVisible, setRouteVisible] = useState(false);
-  const [startLocation, setStartLocation] = useState(null);
-  const [endLocation, setEndLocation] = useState(null);
-  const mapRef = useRef();
 
-  const handleMapClick = (e) => {
-    if (!startLocation) {
-      setStartLocation(e.latlng);
-    } else if (!endLocation) {
-      setEndLocation(e.latlng);
-      setRouteVisible(true); // Odată ce sunt selectate două locații, se poate trasa ruta
-    }
-  };
-
-  useEffect(() => {
-    if (routeVisible && startLocation && endLocation) {
-      const map = mapRef.current;
-      const routingControl = L.Routing.control({
-        waypoints: [
-          L.latLng(startLocation.lat, startLocation.lng),
-          L.latLng(endLocation.lat, endLocation.lng),
-        ],
-        createMarker: function () { return null; }  // Nu vrem marker pentru punctele de pe traseu
-      }).addTo(map);
-  
-      return () => {
-        map.removeControl(routingControl);  // Curățăm ruta când componenta se actualizează
-      };
-    }
-  }, [routeVisible, startLocation, endLocation]);
 
   useEffect(() => {
     const fetchLocatiiUtilizator = async () => {
@@ -501,9 +471,6 @@ const Harta = () => {
 
   return (
     <Container>
-      <ButtonContainer>
-        <Button onClick={() => setRouteVisible(false)}>Ascunde ruta</Button>
-      </ButtonContainer>
       <SideMenu isOpen={isMenuOpen}>
         <SideMenuButton isOpen={isMenuOpen} onClick={() => setIsMenuOpen(!isMenuOpen)}>
           <img src={`${process.env.PUBLIC_URL}/more.png`} alt="Menu" />
@@ -558,10 +525,7 @@ const Harta = () => {
         </Button>
       </ButtonContainer>
 
-      <MapContainer center={[44.4268, 26.1025]} zoom={13} scrollWheelZoom={true} style={{ height: "100vh", width: "100vw" }}
-      ref={mapRef} 
-      onClick={handleMapClick}
-      >
+      <MapContainer center={[44.4268, 26.1025]} zoom={13} scrollWheelZoom={true} style={{ height: "100vh", width: "100vw" }}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
