@@ -434,7 +434,7 @@ const Harta = () => {
           isOpen={isMenuOpen}
           onClick={() => {
             localStorage.clear();
-            window.location.href = "/login";
+            navigate("/");
           }}
         >
           <img src={`${process.env.PUBLIC_URL}/logout.png`} alt="Logout" />
