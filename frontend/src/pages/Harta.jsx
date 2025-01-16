@@ -19,8 +19,11 @@ const Container = styled.div`
 
 const ButtonContainer = styled.div`
   position: absolute;
-  top: 2%;
+  top: 1px;
   left: 18%;
+  background-color: white;
+  padding: 5px;
+  border: 1px solid black;
   z-index: 1000;
   display: flex;
   flex-direction: row;
@@ -193,6 +196,13 @@ const customMarkerIcon = new L.Icon({
   shadowSize: [40, 40],
 });
 
+const customMarkerIconRed = new L.Icon({
+  iconUrl: "https://cdn-icons-png.flaticon.com/512/190/190411.png",
+  iconSize: [30, 45],
+  iconAnchor: [15, 45],
+  popupAnchor: [0, -40],
+});
+
 const newMarkerIcon = new L.Icon({
   iconUrl: "https://cdn-icons-png.flaticon.com/512/854/854866.png",
   iconSize: [30, 45],
@@ -240,7 +250,7 @@ const AddLocationMarker = ({ setLocatii }) => {
     },
   });
 
-  
+
 
   const handleAddLocation = async () => {
     if (locationData.nume && locationData.descriere && locationData.adresa) {
@@ -269,7 +279,7 @@ const AddLocationMarker = ({ setLocatii }) => {
     }
   };
 
-  
+
   return newLocation ? (
     <Marker position={newLocation} icon={newMarkerIcon}>
       <Popup>
@@ -317,7 +327,29 @@ const Harta = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const navigate = useNavigate();
   const buttonContainerRef = useRef(null);
+  const [locatiiUtilizator, setLocatiiUtilizator] = useState([]);
 
+
+  useEffect(() => {
+    const fetchLocatiiUtilizator = async () => {
+      try {
+        const utilizatorId = localStorage.getItem("utilizatorId");
+        if (utilizatorId) {
+          const response = await axios.get(
+            `https://de9b-86-124-206-15.ngrok-free.app/api/locatii-utilizator/locatii/utilizator/${utilizatorId}`,
+            {
+              headers: { "ngrok-skip-browser-warning": "true" },
+            }
+          );
+          setLocatiiUtilizator(response.data);
+        }
+      } catch (error) {
+        console.error("Eroare la preluarea locațiilor utilizatorului:", error);
+      }
+    };
+
+    fetchLocatiiUtilizator();
+  }, []);
 
   useEffect(() => {
     const fetchLocatii = async () => {
@@ -378,47 +410,47 @@ const Harta = () => {
           "ngrok-skip-browser-warning": "true"
         }
       })
-      .then(response => setLocatii(response.data))
-      .catch(error => console.error("Eroare la preluarea locațiilor:", error));
+        .then(response => setLocatii(response.data))
+        .catch(error => console.error("Eroare la preluarea locațiilor:", error));
     } else {
       axios.get(`https://de9b-86-124-206-15.ngrok-free.app/api/atribute/locatii?numeAtribut=${newFilters.join(',')}`, {
         headers: {
           "ngrok-skip-browser-warning": "true"
         }
       })
-      .then(response => setLocatii(response.data))
-      .catch(error => console.error("Eroare la preluarea locațiilor filtrate:", error));
+        .then(response => setLocatii(response.data))
+        .catch(error => console.error("Eroare la preluarea locațiilor filtrate:", error));
     }
   };
-  
+
   const handleSubmitReview = async () => {
     if (rating && comentariu) {
       try {
         // Obține utilizatorul ID din localStorage
         const utilizatorId = localStorage.getItem('utilizatorId');
-        
+
         // Verifică dacă ID-ul există și este valid
         if (!utilizatorId) {
           alert("ID-ul utilizatorului nu a fost găsit în localStorage!");
           return;
         }
-  
+
         const locatieId = selectedLocatie.id;  // ID-ul locației selectate
-  
+
         const response = await axios.post(
           `https://de9b-86-124-206-15.ngrok-free.app/api/recenzii/adauga/${utilizatorId}`, {
-            locatieId: locatieId,
-            rating: rating,
-            comentariu: comentariu
-          }, {
-            headers: {
-              "ngrok-skip-browser-warning": "true"
-            }
-          });
-        
+          locatieId: locatieId,
+          rating: rating,
+          comentariu: comentariu
+        }, {
+          headers: {
+            "ngrok-skip-browser-warning": "true"
+          }
+        });
+
         // Actualizează lista de recenzii cu recenzia adăugată
         setRecenzii([...recenzii, response.data]);
-        
+
         // Resetează valorile inputurilor
         setRating(0);
         setComentariu('');
@@ -429,7 +461,7 @@ const Harta = () => {
       alert("Te rog completează ratingul și comentariul!");
     }
   };
-  
+
   const handleWheel = (event) => {
     if (buttonContainerRef.current) {
       const container = buttonContainerRef.current;
@@ -471,8 +503,8 @@ const Harta = () => {
         </SideMenuButton>
       </SideMenu>
       <ButtonContainer
-      ref={buttonContainerRef}
-      onWheel={handleWheel}
+        ref={buttonContainerRef}
+        onWheel={handleWheel}
       >
         {atribute.map((atribut) => (
           <Button
@@ -491,8 +523,8 @@ const Harta = () => {
                 "ngrok-skip-browser-warning": "true"
               }
             })
-            .then(response => setLocatii(response.data))
-            .catch(error => console.error("Eroare la preluarea locațiilor:", error));
+              .then(response => setLocatii(response.data))
+              .catch(error => console.error("Eroare la preluarea locațiilor:", error));
           }}
         >
           Toate
@@ -516,6 +548,22 @@ const Harta = () => {
             />
           );
         })}
+        {Array.isArray(locatiiUtilizator) && locatiiUtilizator.map((locatie) => (
+          <Marker
+            key={`utilizator-${locatie.id}`}
+            position={[locatie.latitudine, locatie.longitudine]}
+            icon={customMarkerIconRed}
+            eventHandlers={{
+              click: () => setSelectedLocatie(locatie),
+            }}
+          >
+            <Popup>
+              <strong>{locatie.nume}</strong>
+              <br />
+              {locatie.descriere}
+            </Popup>
+          </Marker>
+        ))}
         <AddLocationMarker setLocatii={setLocatii} />
       </MapContainer>
 
