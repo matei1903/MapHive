@@ -557,11 +557,6 @@ const Harta = () => {
               click: () => setSelectedLocatie(locatie),
             }}
           >
-            <Popup>
-              <strong>{locatie.nume}</strong>
-              <br />
-              {locatie.descriere}
-            </Popup>
           </Marker>
         ))}
         <AddLocationMarker setLocatii={setLocatii} />
@@ -570,14 +565,14 @@ const Harta = () => {
       {selectedLocatie && (
         <PopupContainer>
           <CloseButton onClick={() => setSelectedLocatie(null)}>&times;</CloseButton>
-          <PopupTitle>{selectedLocatie.locatie_nume}</PopupTitle>
+          <PopupTitle>{selectedLocatie.locatie_nume || selectedLocatie.nume}</PopupTitle>
           <PopupContent>
-            <strong>Adresă:</strong> {selectedLocatie.locatie_adresa}<br />
+          <strong>Adresă:</strong> {selectedLocatie.locatie_adresa || selectedLocatie.adresa}<br />
             <strong>Descriere:</strong> {selectedLocatie.descriere}<br />
             <strong>Tip:</strong> {selectedLocatie.tipLocatie?.nume}<br />
             <strong>Recenzii:</strong>
             <ul>
-              {recenzii.filter(recenzie => recenzie.locatie.id === selectedLocatie.id).map((recenzie, index) => (
+              {recenzii.filter(recenzie => recenzie.locatie?.id === selectedLocatie.id || recenzie.locatie?.nume === selectedLocatie.nume).map((recenzie, index) => (
                 <li key={index}>
                   <strong>Rating:</strong> {recenzie.rating}/5<br />
                   <strong>Comentariu:</strong> {recenzie.comentariu}
