@@ -362,11 +362,6 @@ const Harta = () => {
     }
   }, [selectedPoints, getRoute]);
 
-  useEffect(() => {
-    if (selectedPoints.length === 2) {
-      getRoute();
-    }
-  }, [selectedPoints]);
 
   useEffect(() => {
     const fetchLocatiiUtilizator = async () => {
