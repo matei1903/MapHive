@@ -190,8 +190,22 @@ const RouteContainer = styled.div`
   padding: 10px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
+  z-index: 9999;
 `;
+
+const startIcon = new L.Icon({
+  iconUrl: "path/to/start-icon.png", // Înlocuiește cu calea către icon-ul tău de start
+  iconSize: [30, 40],
+  iconAnchor: [15, 40],
+  popupAnchor: [0, -40],
+});
+
+const endIcon = new L.Icon({
+  iconUrl: "path/to/end-icon.png", // Înlocuiește cu calea către icon-ul tău de end
+  iconSize: [30, 40],
+  iconAnchor: [15, 40],
+  popupAnchor: [0, -40],
+});
 
 const RoutingControl = ({ startPoint, endPoint }) => {
   const map = useMapEvents({});
@@ -210,6 +224,14 @@ const RoutingControl = ({ startPoint, endPoint }) => {
         ],
         routeWhileDragging: true,
         show: false,
+        createMarker: function (i, waypoint, n) {
+          // Personalizăm marker-ele
+          if (i === 0) {
+            return L.marker(waypoint.latLng, { icon: startIcon }).bindPopup("Start Point");
+          } else if (i === n - 1) {
+            return L.marker(waypoint.latLng, { icon: endIcon }).bindPopup("End Point");
+          }
+        },
       }).addTo(map);
     }
 
@@ -239,27 +261,10 @@ const [points, setPoints] = useState([]);
     },
   });
 
-  return (
-    <>
-      {points.map((point, index) => (
-        <Marker key={index} position={point} icon={RouteIcon}>
-          <Popup>
-            {index === 0 ? "Start Point" : "End Point"}
-          </Popup>
-        </Marker>
-      ))}
-    </>
-  );
+  return null;
 };
 
-const RouteIcon = new L.Icon({
-  iconUrl: markerIconPng,
-  shadowUrl: markerShadowPng,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
+
 
 const customMarkerIcon = new L.Icon({
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
