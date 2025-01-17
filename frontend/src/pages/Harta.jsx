@@ -582,7 +582,7 @@ const Harta = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-         <RouteSelector setStartPoint={setStartPoint} setEndPoint={setEndPoint} icon={customMarkerIcon}/>
+         <RouteSelector setStartPoint={setStartPoint} setEndPoint={setEndPoint}/>
          <RoutingControl startPoint={startPoint} endPoint={endPoint} />
         {Array.isArray(locatii) && locatii.map((locatie) => {
           return (
