@@ -29,5 +29,51 @@ public class Recenzie {
     @Column(name = "created_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    // Getteri și setteri
+    public Utilizator getUtilizator() {
+        return utilizator;
+    }
+
+    public void setUtilizator(Utilizator utilizator) {
+        this.utilizator = utilizator;
+    }
+
+    public Locatie getLocatie() {
+        return locatie;
+    }
+
+    public void setLocatie(Locatie locatie) {
+        this.locatie = locatie;
+    }
+
+    public Integer getRating() {
+        return rating;
+    }
+
+    public void setRating(Integer rating) {
+        this.rating = rating;
+    }
+
+    public String getComentariu() {
+        return comentariu;
+    }
+
+    public void setComentariu(String comentariu) {
+        this.comentariu = comentariu;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 }

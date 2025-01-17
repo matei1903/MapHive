@@ -23,4 +23,36 @@ public class LocatieAtribut {
     private String valoare;
 
     // Getteri și setteri
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Locatie getLocatie() {
+        return locatie;
+    }
+
+    public void setLocatie(Locatie locatie) {
+        this.locatie = locatie;
+    }
+
+    public Atribut getAtribut() {
+        return atribut;
+    }
+
+    public void setAtribut(Atribut atribut) {
+        this.atribut = atribut;
+    }
+
+    public String getValoare() {
+        return valoare;
+    }
+
+    public void setValoare(String valoare) {
+        this.valoare = valoare;
+    }
 }

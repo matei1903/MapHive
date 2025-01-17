@@ -20,6 +20,7 @@ public class Locatie {
 
     private String descriere;
 
+    @JsonProperty("locatie_adresa")
     @Column(nullable = false)
     private String adresa;
 
@@ -37,5 +38,66 @@ public class Locatie {
     public String getNume() {
         return nume;
     }
-    // Getteri și setteri
+
+    public void setNume(String nume) {
+        this.nume = nume;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getDescriere() {
+        return descriere;
+    }
+
+    public String getAdresa() {
+        return adresa;
+    }
+
+    public Double getLatitudine() {
+        return latitudine;
+    }
+
+    public Double getLongitudine() {
+        return longitudine;
+    }
+
+    public TipLocatie getTipLocatie() {
+        return tipLocatie;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setDescriere(String descriere) {
+        this.descriere = descriere;
+    }
+
+    public void setAdresa(String adresa) {
+        this.adresa = adresa;
+    }
+
+    public void setLatitudine(Double latitudine) {
+        this.latitudine = latitudine;
+    }
+
+    public void setLongitudine(Double longitudine) {
+        this.longitudine = longitudine;
+    }
+
+    public void setTipLocatie(TipLocatie tipLocatie) {
+        this.tipLocatie = tipLocatie;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+// Getteri și setteri
 }
