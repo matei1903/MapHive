@@ -400,6 +400,8 @@ const Harta = () => {
   const [endPoint, setEndPoint] = useState(null);
   const [routeCleared, setRouteCleared] = useState(false);
   const map = useMapEvents({});
+  const routingControl = useRef(null);
+  const mapRef = useRef(null);
 
   const resetRoute = () => {
     setStartPoint(null);
@@ -411,7 +413,7 @@ const Harta = () => {
     if (map && startPoint && endPoint && !routeCleared) {
       // Șterge ruta anterioară dacă există
       if (routingControl.current) {
-        map.removeControl(routingControl.current);
+        mapRef.current.removeControl(routingControl.current);
       }
 
       // Creează o nouă rută
