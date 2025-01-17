@@ -182,78 +182,7 @@ const SideMenuButton = styled.button`
   }
 `;
 
-const startIcon = new L.Icon({
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png", // Înlocuiește cu calea către icon-ul tău de start
-  iconSize: [30, 40],
-  iconAnchor: [15, 40],
-  popupAnchor: [0, -40],
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-  shadowSize: [40, 40],
-});
 
-const endIcon = new L.Icon({
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png", // Înlocuiește cu calea către icon-ul tău de start
-  iconSize: [30, 40],
-  iconAnchor: [15, 40],
-  popupAnchor: [0, -40],
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-  shadowSize: [40, 40],
-});
-
-const RoutingControl = ({ startPoint, endPoint, clearRoute }) => {
-  const map = useMapEvents({});
-  const routingControl = useRef(null);
-
-  useEffect(() => {
-    if (startPoint && endPoint && map) {
-      if (routingControl.current) {
-        map.removeControl(routingControl.current);
-      }
-      routingControl.current = L.Routing.control({
-        waypoints: [
-          L.latLng(startPoint.lat, startPoint.lng),
-          L.latLng(endPoint.lat, endPoint.lng),
-        ],
-        routeWhileDragging: true,
-        show: false,
-        createMarker: function (i, waypoint, n) {
-          // Personalizăm marker-ele
-          if (i === 0) {
-            return L.marker(waypoint.latLng, { icon: startIcon }).bindPopup("Start Point");
-          } else if (i === n - 1) {
-            return L.marker(waypoint.latLng, { icon: endIcon }).bindPopup("End Point");
-          }
-        },
-      }).addTo(map);
-    }
-    return () => {
-      if (routingControl.current) {
-        map.removeControl(routingControl.current);
-      }
-      // Clear route when route is reset
-      if (clearRoute) {
-        clearRoute();
-      }
-    };
-  }, [startPoint, endPoint, map, clearRoute]);
-  return null;
-};
-const RouteSelector = ({ setStartPoint, setEndPoint }) => {
-  const [points, setPoints] = useState([]);
-  useMapEvents({
-    click(e) {
-      if (points.length < 2) {
-        setPoints([...points, e.latlng]);
-        if (points.length === 0) {
-          setStartPoint(e.latlng);
-        } else if (points.length === 1) {
-          setEndPoint(e.latlng);
-        }
-      }
-    },
-  });
-  return null;
-};
 
 const customMarkerIcon = new L.Icon({
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
@@ -414,6 +343,56 @@ const Harta = () => {
       setRouteCleared(false); // Reset state for further selection
     }
   }, [routeCleared]);
+
+  const RouteSelector = ({ setStartPoint, setEndPoint }) => {
+    const [points, setPoints] = useState([]);
+    useMapEvents({
+      click(e) {
+        if (points.length < 2) {
+          setPoints([...points, e.latlng]);
+          if (points.length === 0) {
+            setStartPoint(e.latlng);
+          } else if (points.length === 1) {
+            setEndPoint(e.latlng);
+          }
+        }
+      },
+    });
+    return null;
+  };
+  
+  const RoutingControl = ({ startPoint, endPoint, clearRoute }) => {
+    const map = useMapEvents({});
+    const routingControl = useRef(null);
+  
+    useEffect(() => {
+      if (startPoint && endPoint && map) {
+        if (routingControl.current) {
+          map.removeControl(routingControl.current);
+        }
+        routingControl.current = L.Routing.control({
+          waypoints: [
+            L.latLng(startPoint.lat, startPoint.lng),
+            L.latLng(endPoint.lat, endPoint.lng),
+          ],
+          routeWhileDragging: true,
+          createMarker: (i, waypoint) =>
+            L.marker(waypoint.latLng).bindPopup(i === 0 ? "Start" : "End"),
+        }).addTo(map);
+      }
+  
+      return () => {
+        if (routingControl.current) {
+          map.removeControl(routingControl.current);
+        }
+        if (clearRoute) {
+          clearRoute();
+        }
+      };
+    }, [startPoint, endPoint, map, clearRoute]);
+  
+    return null;
+  };
 
   useEffect(() => {
     const fetchLocatiiUtilizator = async () => {
@@ -625,7 +604,9 @@ const Harta = () => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
          <RouteSelector setStartPoint={setStartPoint} setEndPoint={setEndPoint}/>
-         <RoutingControl startPoint={startPoint} endPoint={endPoint} clearRoute={routeCleared ? resetRoute : null}/>
+         {startPoint && endPoint && (
+          <RoutingControl startPoint={startPoint} endPoint={endPoint} clearRoute={resetRoute} />
+        )}
         {Array.isArray(locatii) && locatii.map((locatie) => {
           return (
             <Marker
