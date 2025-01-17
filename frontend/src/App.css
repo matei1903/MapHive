@@ -2,6 +2,12 @@
   text-align: center;
 }
 
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -36,3 +42,38 @@
     transform: rotate(360deg);
   }
 }
+
+.leaflet-routing-container {
+  background-color: white; /* Schimbi transparența sau culoarea */
+  border-radius: 8px; /* Adăugi colțuri rotunjite dacă vrei */
+  padding: 10px;
+  color: black;
+}
+
+/* Altele stiluri pentru a modifica detaliile rutei */
+.leaflet-routing-instructions {
+  color: black; /* Modifici culoarea textului */
+  font-size: 14px; /* Schimbi dimensiunea fontului */
+}
+.leaflet-routing-alt {
+  color: black;
+}
+
+.leaflet-marker-icon {
+  background-image: url("https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png");
+  width: 30px;
+  height: 45px;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.leaflet-marker-icon-shadow {
+  background-image: url("https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png");
+  width: 40px;
+  height: 40px;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
