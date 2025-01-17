@@ -181,7 +181,7 @@ const SideMenuButton = styled.button`
     margin-right: ${({ isOpen }) => (isOpen ? "10px" : "0")};
   }
 `;
-/*
+
 const startIcon = new L.Icon({
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png", // Înlocuiește cu calea către icon-ul tău de start
   iconSize: [30, 40],
@@ -199,13 +199,13 @@ const endIcon = new L.Icon({
   shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
   shadowSize: [40, 40],
 });
-*/
-/*const RoutingControl = ({ startPoint, endPoint, clearRoute }) => {
+
+const RoutingControl = ({ startPoint, endPoint, clearRoute }) => {
   const map = useMapEvents({});
   const routingControl = useRef(null);
 
   useEffect(() => {
-    if (startPoint && endPoint && map && !routeCleared) {
+    if (startPoint && endPoint && map) {
       if (routingControl.current) {
         map.removeControl(routingControl.current);
       }
@@ -237,7 +237,7 @@ const endIcon = new L.Icon({
     };
   }, [startPoint, endPoint, map, clearRoute]);
   return null;
-};*/
+};
 const RouteSelector = ({ setStartPoint, setEndPoint }) => {
   const [points, setPoints] = useState([]);
   useMapEvents({
@@ -399,45 +399,12 @@ const Harta = () => {
   const [startPoint, setStartPoint] = useState(null);
   const [endPoint, setEndPoint] = useState(null);
   const [routeCleared, setRouteCleared] = useState(false);
-  const map = useMapEvents({});
-  const routingControl = useRef(null);
-  const mapRef = useRef(null);
 
   const resetRoute = () => {
     setStartPoint(null);
     setEndPoint(null);
     setRouteCleared(true);  // To trigger route removal and reset
   };
-
-  useEffect(() => {
-    if (map && startPoint && endPoint && !routeCleared) {
-      // Șterge ruta anterioară dacă există
-      if (routingControl.current) {
-        mapRef.current.removeControl(routingControl.current);
-      }
-
-      // Creează o nouă rută
-      routingControl.current = L.Routing.control({
-        waypoints: [
-          L.latLng(startPoint.lat, startPoint.lng),
-          L.latLng(endPoint.lat, endPoint.lng),
-        ],
-        routeWhileDragging: true,
-      }).addTo(map);
-    }
-
-    return () => {
-      if (routingControl.current) {
-        map.removeControl(routingControl.current);
-      }
-    };
-  }, [startPoint, endPoint, map, routeCleared]);
-
-  useEffect(() => {
-    if (routeCleared) {
-      setRouteCleared(false);
-    }
-  }, [routeCleared]);
 
   useEffect(() => {
     if (routeCleared) {
