@@ -92,7 +92,7 @@ const Login = () => {
             required
             style={{
               width: '100%',
-              padding: '10px',
+              padding: '5px',
               margin: '5px 0',
               border: '1px solid #ddd',
               borderRadius: '4px',
@@ -108,7 +108,7 @@ const Login = () => {
             required
             style={{
               width: '100%',
-              padding: '10px',
+              padding: '5px',
               margin: '5px 0',
               border: '1px solid #ddd',
               borderRadius: '4px',
