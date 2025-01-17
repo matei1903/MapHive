@@ -6,6 +6,8 @@ import "leaflet-routing-machine";
 import L from "leaflet";
 import styled from "styled-components";
 import { useNavigate } from 'react-router-dom';
+import markerIconPng from "leaflet/dist/images/marker-icon.png";
+import markerShadowPng from "leaflet/dist/images/marker-shadow.png";
 
 const Container = styled.div`
   height: 100%;
@@ -182,6 +184,15 @@ const SideMenuButton = styled.button`
   }
 `;
 
+const RouteContainer = styled.div`
+  position: absolute;
+  background-color: white;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+`;
+
 const RoutingControl = ({ startPoint, endPoint }) => {
   const map = useMapEvents({});
   const routingControl = useRef(null);
@@ -213,7 +224,7 @@ const RoutingControl = ({ startPoint, endPoint }) => {
 };
 
 const RouteSelector = ({ setStartPoint, setEndPoint }) => {
-  const [points, setPoints] = useState([]);
+const [points, setPoints] = useState([]);
 
   useMapEvents({
     click(e) {
@@ -228,8 +239,27 @@ const RouteSelector = ({ setStartPoint, setEndPoint }) => {
     },
   });
 
-  return null;
+  return (
+    <>
+      {points.map((point, index) => (
+        <Marker key={index} position={point} icon={RouteIcon}>
+          <Popup>
+            {index === 0 ? "Start Point" : "End Point"}
+          </Popup>
+        </Marker>
+      ))}
+    </>
+  );
 };
+
+const RouteIcon = new L.Icon({
+  iconUrl: markerIconPng,
+  shadowUrl: markerShadowPng,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
 
 const customMarkerIcon = new L.Icon({
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
@@ -294,6 +324,7 @@ const AddLocationMarker = ({ setLocatii }) => {
     },
   });
 
+  
 
 
   const handleAddLocation = async () => {
@@ -582,8 +613,10 @@ const Harta = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+        <RouteContainer>
          <RouteSelector setStartPoint={setStartPoint} setEndPoint={setEndPoint} />
          <RoutingControl startPoint={startPoint} endPoint={endPoint} />
+         </RouteContainer>
         {Array.isArray(locatii) && locatii.map((locatie) => {
           return (
             <Marker
