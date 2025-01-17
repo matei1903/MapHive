@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { MapContainer, TileLayer, Marker, useMapEvents, Popup } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
+import "leaflet-routing-machine";
 import L from "leaflet";
 import styled from "styled-components";
 import { useNavigate } from 'react-router-dom';
@@ -181,6 +182,55 @@ const SideMenuButton = styled.button`
   }
 `;
 
+const RoutingControl = ({ startPoint, endPoint }) => {
+  const map = useMapEvents({});
+  const routingControl = useRef(null);
+
+  useEffect(() => {
+    if (startPoint && endPoint && map) {
+      if (routingControl.current) {
+        map.removeControl(routingControl.current);
+      }
+
+      routingControl.current = L.Routing.control({
+        waypoints: [
+          L.latLng(startPoint.lat, startPoint.lng),
+          L.latLng(endPoint.lat, endPoint.lng),
+        ],
+        routeWhileDragging: true,
+        show: false,
+      }).addTo(map);
+    }
+
+    return () => {
+      if (routingControl.current) {
+        map.removeControl(routingControl.current);
+      }
+    };
+  }, [startPoint, endPoint, map]);
+
+  return null;
+};
+
+const RouteSelector = ({ setStartPoint, setEndPoint }) => {
+  const [points, setPoints] = useState([]);
+
+  useMapEvents({
+    click(e) {
+      if (points.length < 2) {
+        setPoints([...points, e.latlng]);
+        if (points.length === 0) {
+          setStartPoint(e.latlng);
+        } else if (points.length === 1) {
+          setEndPoint(e.latlng);
+        }
+      }
+    },
+  });
+
+  return null;
+};
+
 const customMarkerIcon = new L.Icon({
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
   iconSize: [30, 45],
@@ -322,6 +372,8 @@ const Harta = () => {
   const navigate = useNavigate();
   const buttonContainerRef = useRef(null);
   const [locatiiUtilizator, setLocatiiUtilizator] = useState([]);
+  const [startPoint, setStartPoint] = useState(null);
+  const [endPoint, setEndPoint] = useState(null);
 
 
   useEffect(() => {
@@ -530,6 +582,8 @@ const Harta = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+         <RouteSelector setStartPoint={setStartPoint} setEndPoint={setEndPoint} />
+         <RoutingControl startPoint={startPoint} endPoint={endPoint} />
         {Array.isArray(locatii) && locatii.map((locatie) => {
           return (
             <Marker
