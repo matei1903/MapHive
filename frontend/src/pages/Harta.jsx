@@ -182,29 +182,6 @@ const SideMenuButton = styled.button`
   }
 `;
 
-const RouteContainer = styled.div`
-  position: absolute;
-  background-color: white;
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 9999;
-`;
-
-const startIcon = new L.Icon({
-  iconUrl: "path/to/start-icon.png", // Înlocuiește cu calea către icon-ul tău de start
-  iconSize: [30, 40],
-  iconAnchor: [15, 40],
-  popupAnchor: [0, -40],
-});
-
-const endIcon = new L.Icon({
-  iconUrl: "path/to/end-icon.png", // Înlocuiește cu calea către icon-ul tău de end
-  iconSize: [30, 40],
-  iconAnchor: [15, 40],
-  popupAnchor: [0, -40],
-});
-
 const RoutingControl = ({ startPoint, endPoint }) => {
   const map = useMapEvents({});
   const routingControl = useRef(null);
@@ -222,14 +199,6 @@ const RoutingControl = ({ startPoint, endPoint }) => {
         ],
         routeWhileDragging: true,
         show: false,
-        createMarker: function (i, waypoint, n) {
-          // Personalizăm marker-ele
-          if (i === 0) {
-            return L.marker(waypoint.latLng, { icon: startIcon }).bindPopup("Start Point");
-          } else if (i === n - 1) {
-            return L.marker(waypoint.latLng, { icon: endIcon }).bindPopup("End Point");
-          }
-        },
       }).addTo(map);
     }
 
@@ -244,7 +213,7 @@ const RoutingControl = ({ startPoint, endPoint }) => {
 };
 
 const RouteSelector = ({ setStartPoint, setEndPoint }) => {
-const [points, setPoints] = useState([]);
+  const [points, setPoints] = useState([]);
 
   useMapEvents({
     click(e) {
@@ -261,8 +230,6 @@ const [points, setPoints] = useState([]);
 
   return null;
 };
-
-
 
 const customMarkerIcon = new L.Icon({
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
@@ -327,7 +294,6 @@ const AddLocationMarker = ({ setLocatii }) => {
     },
   });
 
-  
 
 
   const handleAddLocation = async () => {
@@ -616,10 +582,8 @@ const Harta = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <RouteContainer>
          <RouteSelector setStartPoint={setStartPoint} setEndPoint={setEndPoint} />
          <RoutingControl startPoint={startPoint} endPoint={endPoint} />
-         </RouteContainer>
         {Array.isArray(locatii) && locatii.map((locatie) => {
           return (
             <Marker
