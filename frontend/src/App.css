@@ -52,6 +52,9 @@ html, body, #root {
 
 /* Altele stiluri pentru a modifica detaliile rutei */
 .leaflet-routing-instructions {
-  color: #333; /* Modifici culoarea textului */
+  color: black; /* Modifici culoarea textului */
   font-size: 14px; /* Schimbi dimensiunea fontului */
+}
+.leaflet-routing-alt {
+  color: black;
 }
