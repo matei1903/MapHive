@@ -42,3 +42,15 @@ html, body, #root {
     transform: rotate(360deg);
   }
 }
+
+.leaflet-routing-container {
+  background-color: white; /* Schimbi transparența sau culoarea */
+  border-radius: 8px; /* Adăugi colțuri rotunjite dacă vrei */
+  padding: 10px;
+}
+
+/* Altele stiluri pentru a modifica detaliile rutei */
+.leaflet-routing-instructions {
+  color: #333; /* Modifici culoarea textului */
+  font-size: 14px; /* Schimbi dimensiunea fontului */
+}
