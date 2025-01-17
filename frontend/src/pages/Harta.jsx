@@ -572,12 +572,7 @@ const Harta = () => {
           Toate
         </Button>
       </ButtonContainer>
-      <Button onClick={() => {
-        setStartPoint(null);
-        setEndPoint(null);
-      }}>
-        Resetează ruta
-      </Button>
+
 
       <MapContainer center={[44.4268, 26.1025]} zoom={13} scrollWheelZoom={true} style={{ height: "100vh", width: "100vw" }} whenCreated={(mapInstance) => (mapRef.current = mapInstance)}>
         <TileLayer
@@ -608,6 +603,12 @@ const Harta = () => {
           </Marker>
         ))}
         <AddLocationMarker setLocatii={setLocatii} />
+        <Button onClick={() => {
+          setStartPoint(null);
+          setEndPoint(null);
+        }}>
+          Resetează ruta
+        </Button>
       </MapContainer>
 
       {selectedLocatie && (
