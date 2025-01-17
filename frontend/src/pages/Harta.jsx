@@ -446,30 +446,31 @@ const Harta = () => {
 
   const handleFilterChange = (atribut) => {
     let newFilters;
+  
+    // Adăugăm sau eliminăm atributul selectat
     if (filters.includes(atribut)) {
       newFilters = filters.filter((filter) => filter !== atribut);
     } else {
       newFilters = [...filters, atribut];
     }
+  
     setFilters(newFilters);
-    if (newFilters.length === 0) {
-      axios.get('https://30f5-188-26-188-176.ngrok-free.app/api/locatii', {
-        headers: {
-          "ngrok-skip-browser-warning": "true"
-        }
-      })
-        .then(response => setLocatii(response.data))
-        .catch(error => console.error("Eroare la preluarea locațiilor:", error));
-    } else {
-      axios.get(`https://30f5-188-26-188-176.ngrok-free.app/api/atribute/locatii?numeAtribut=${newFilters.join(',')}`, {
-        headers: {
-          "ngrok-skip-browser-warning": "true"
-        }
-      })
-        .then(response => setLocatii(response.data))
-        .catch(error => console.error("Eroare la preluarea locațiilor filtrate:", error));
-    }
+  
+    // Construim URL-ul în funcție de filtrele selectate
+    const url = newFilters.length === 0
+      ? 'https://30f5-188-26-188-176.ngrok-free.app/api/locatii'
+      : `https://30f5-188-26-188-176.ngrok-free.app/api/atribute/locatii?numeAtribute=${encodeURIComponent(newFilters.join(','))}`;
+  
+    // Facem request-ul către backend
+    axios.get(url, {
+      headers: {
+        "ngrok-skip-browser-warning": "true"
+      }
+    })
+      .then(response => setLocatii(response.data))
+      .catch(error => console.error("Eroare la preluarea locațiilor:", error));
   };
+  
 
   const handleSubmitReview = async () => {
     if (rating && comentariu) {
