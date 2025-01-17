@@ -56,7 +56,7 @@ const Login = () => {
       justifyContent: 'center',
       alignItems: 'center',
       height: '100vh',
-      color: black,
+      color: 'black',
     }}>
       <img
         src="frontend\public\logo MapHive.png"
@@ -77,7 +77,7 @@ const Login = () => {
           textAlign: 'center',
           marginBottom: '20px',
           fontSize: '24px',
-          color: black,
+          color: 'black',
           fontFamily: '"Akaya Telivigala", serif',
         }}>
           Login
