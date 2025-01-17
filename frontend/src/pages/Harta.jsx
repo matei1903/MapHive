@@ -182,31 +182,16 @@ const SideMenuButton = styled.button`
   }
 `;
 
-const startIcon = new L.Icon({
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png", // Înlocuiește cu calea către icon-ul tău de start
-  iconSize: [30, 40],
-  iconAnchor: [15, 40],
-  popupAnchor: [0, -40],
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-  shadowSize: [40, 40],
-});
-const endIcon = new L.Icon({
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png", // Înlocuiește cu calea către icon-ul tău de start
-  iconSize: [30, 40],
-  iconAnchor: [15, 40],
-  popupAnchor: [0, -40],
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-  shadowSize: [40, 40],
-});
-
-const RoutingControl = ({ startPoint, endPoint, clearRoute }) => {
+const RoutingControl = ({ startPoint, endPoint }) => {
   const map = useMapEvents({});
   const routingControl = useRef(null);
+
   useEffect(() => {
     if (startPoint && endPoint && map) {
       if (routingControl.current) {
         map.removeControl(routingControl.current);
       }
+
       routingControl.current = L.Routing.control({
         waypoints: [
           L.latLng(startPoint.lat, startPoint.lng),
@@ -214,30 +199,23 @@ const RoutingControl = ({ startPoint, endPoint, clearRoute }) => {
         ],
         routeWhileDragging: true,
         show: false,
-        createMarker: function (i, waypoint, n) {
-          // Personalizăm marker-ele
-          if (i === 0) {
-            return L.marker(waypoint.latLng, { icon: startIcon }).bindPopup("Start Point");
-          } else if (i === n - 1) {
-            return L.marker(waypoint.latLng, { icon: endIcon }).bindPopup("End Point");
-          }
-        },
+        icon: {customMarkerIcon},
       }).addTo(map);
     }
+
     return () => {
       if (routingControl.current) {
         map.removeControl(routingControl.current);
       }
-      // Clear route when route is reset
-      if (clearRoute) {
-        clearRoute();
-      }
     };
-  }, [startPoint, endPoint, map, clearRoute]);
+  }, [startPoint, endPoint, map]);
+
   return null;
 };
+
 const RouteSelector = ({ setStartPoint, setEndPoint }) => {
   const [points, setPoints] = useState([]);
+
   useMapEvents({
     click(e) {
       if (points.length < 2) {
@@ -250,6 +228,7 @@ const RouteSelector = ({ setStartPoint, setEndPoint }) => {
       }
     },
   });
+
   return null;
 };
 
@@ -396,22 +375,7 @@ const Harta = () => {
   const [locatiiUtilizator, setLocatiiUtilizator] = useState([]);
   const [startPoint, setStartPoint] = useState(null);
   const [endPoint, setEndPoint] = useState(null);
-  const [routeCleared, setRouteCleared] = useState(false);
 
-  const resetRoute = () => {
-    setStartPoint(null);
-    setEndPoint(null);
-    setRouteCleared(true);  // To trigger route removal and reset
-  };
-
-  useEffect(() => {
-    if (routeCleared) {
-      // Allow selecting new locations after reset
-      setStartPoint(null);
-      setEndPoint(null);
-      setRouteCleared(false); // Reset state for further selection
-    }
-  }, [routeCleared]);
 
   useEffect(() => {
     const fetchLocatiiUtilizator = async () => {
@@ -613,9 +577,6 @@ const Harta = () => {
           Toate
         </Button>
       </ButtonContainer>
-      <button onClick={resetRoute} style={{ position: "absolute", zIndex: 1000, left: 10, top: 10 }}>
-        Resetează ruta
-      </button>
 
       <MapContainer center={[44.4268, 26.1025]} zoom={13} scrollWheelZoom={true} style={{ height: "100vh", width: "100vw" }}>
         <TileLayer
@@ -623,7 +584,7 @@ const Harta = () => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
          <RouteSelector setStartPoint={setStartPoint} setEndPoint={setEndPoint}/>
-         <RoutingControl startPoint={startPoint} endPoint={endPoint} clearRoute={routeCleared ? resetRoute : null}/>
+         <RoutingControl startPoint={startPoint} endPoint={endPoint} />
         {Array.isArray(locatii) && locatii.map((locatie) => {
           return (
             <Marker
