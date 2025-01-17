@@ -59,7 +59,7 @@ const Login = () => {
       color: 'black',
     }}>
       <img
-        src="../public/logoMapHive.png"
+        src="/logoMapHive.png"
         alt="Logo MapHive"
         style={{
           width: '150px',
