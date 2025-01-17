@@ -6,8 +6,6 @@ import "leaflet-routing-machine";
 import L from "leaflet";
 import styled from "styled-components";
 import { useNavigate } from 'react-router-dom';
-import markerIconPng from "leaflet/dist/images/marker-icon.png";
-import markerShadowPng from "leaflet/dist/images/marker-shadow.png";
 
 const Container = styled.div`
   height: 100%;
