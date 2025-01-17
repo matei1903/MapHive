@@ -55,8 +55,8 @@ const Button = styled.button`
   border-radius: 50px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
-  width: 150px;
   text-align: center;
+  white-space: nowrap; /* Previne trunchierea textului */
   &:hover {
     background-color: #007bff;
     color: white;
