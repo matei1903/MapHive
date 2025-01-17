@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const LocatiiUtilizator = () => {
   const [locatii, setLocatii] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchLocatiiUtilizator = async () => {
@@ -32,20 +34,52 @@ const LocatiiUtilizator = () => {
 
   return (
     <div>
-      <h1>Locațiile adăugate de tine</h1>
+      <h1
+        style={{
+          fontFamily: "'Akaya Telivigala', serif",
+          textAlign: "center",
+        }}
+      >
+        Locațiile adăugate de tine
+      </h1>
+      <button
+        onClick={() => navigate("/harta")}
+        style={{
+          display: "block",
+          margin: "20px auto",
+          padding: "10px 20px",
+          fontSize: "16px",
+          color: "#fff",
+          backgroundColor: "#007bff",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+        }}
+      >
+        Înapoi la hartă
+      </button>
       {locatii.length > 0 ? (
-        <div style={{ display: 'grid', gap: '20px' }}>
+        <div
+          style={{
+            display: "grid",
+            gap: "20px",
+            backgroundColor: "#fff",
+            padding: "20px",
+            borderRadius: "10px",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+          }}
+        >
           {locatii.map((locatie) => (
             <div
-              key={locatie.id} // Asigură-te că "id" este un câmp unic pentru fiecare locație
+              key={locatie.id}
               style={{
-                border: '1px solid #ccc',
-                borderRadius: '8px',
-                padding: '15px',
-                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                border: "1px solid #ccc",
+                borderRadius: "8px",
+                padding: "15px",
+                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
               }}
             >
-              <h2 style={{ margin: '0 0 10px' }}>{locatie.nume}</h2>
+              <h2 style={{ margin: "0 0 10px" }}>{locatie.nume}</h2>
               <p><strong>Adresă:</strong> {locatie.adresa}</p>
               <p><strong>Descriere:</strong> {locatie.descriere}</p>
             </div>

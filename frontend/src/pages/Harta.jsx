@@ -54,16 +54,17 @@ const Button = styled.button`
   padding: 6px 12px;
   border-radius: 50px;
   cursor: pointer;
+  min-width: fit-content;
   transition: background-color 0.3s ease, transform 0.2s ease;
   text-align: center;
   white-space: nowrap; /* Previne trunchierea textului */
   &:hover {
-    background-color: #007bff;
+    background-color: #d7c795;
     color: white;
     transform: scale(1.05);
   }
   &.active {
-    background-color: #007bff;
+    background-color: #d7c795;
     color: white;
   }
   &:focus {
@@ -101,7 +102,7 @@ const Input = styled.input`
 `;
 
 const SubmitButton = styled.button`
-  background-color: #007bff;
+  background-color: #d7c795;
   color: white;
   border: none;
   padding: 10px;
@@ -109,7 +110,7 @@ const SubmitButton = styled.button`
   cursor: pointer;
   font-size: 14px;
   &:hover {
-    background-color: #0056b3;
+    background-color: #ac9f77;
   }
 `;
 
