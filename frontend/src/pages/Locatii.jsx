@@ -66,7 +66,7 @@ const LocatiiUtilizator = () => {
             backgroundColor: "#d7c795",
             padding: "20px",
             borderRadius: "10px",
-            color: black,
+            color: 'black',
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
           }}
         >
@@ -77,8 +77,8 @@ const LocatiiUtilizator = () => {
                 border: "1px solid #ccc",
                 borderRadius: "8px",
                 padding: "15px",
-                backgroundColor: white,
-                color: black,
+                backgroundColor: 'white',
+                color: 'black',
                 boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
               }}
             >
