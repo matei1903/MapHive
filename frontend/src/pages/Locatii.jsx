@@ -50,7 +50,7 @@ const LocatiiUtilizator = () => {
           padding: "10px 20px",
           fontSize: "16px",
           color: "#fff",
-          backgroundColor: "#007bff",
+          backgroundColor: "#968b68",
           border: "none",
           borderRadius: "5px",
           cursor: "pointer",
@@ -63,9 +63,10 @@ const LocatiiUtilizator = () => {
           style={{
             display: "grid",
             gap: "20px",
-            backgroundColor: "#fff",
+            backgroundColor: "#d7c795",
             padding: "20px",
             borderRadius: "10px",
+            color: black,
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
           }}
         >
@@ -76,6 +77,8 @@ const LocatiiUtilizator = () => {
                 border: "1px solid #ccc",
                 borderRadius: "8px",
                 padding: "15px",
+                backgroundColor: white,
+                color: black,
                 boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
               }}
             >
