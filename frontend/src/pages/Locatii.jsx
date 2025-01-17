@@ -103,12 +103,13 @@ const LocatiiUtilizator = () => {
               <button
                 onClick={() => handleStergereLocatie(locatie.id)}
                 style={{
-                  backgroundColor: "#f44336",
-                  color: "white",
+                  backgroundColor: "#b26666",
+                  color: "black",
                   border: "none",
                   padding: "10px 20px",
                   borderRadius: "5px",
                   cursor: "pointer",
+                  zIndex: '9999',
                 }}
               >
                 Șterge locația
