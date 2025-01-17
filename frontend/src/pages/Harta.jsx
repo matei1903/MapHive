@@ -527,8 +527,8 @@ const Harta = () => {
   return (
     <Container>
       <SideMenu isOpen={isMenuOpen}>\
-        <img src='/logoMapHive.png' alt="logo Maphive" style={{width: '5px', marginBottom: '2px',}}></img>
-        <h2 style={{textAlign: 'center', marginBottom: '5px', fontSize: '10px', color: 'black', fontFamily: '"Akaya Telivigala", serif',}}>MapHive</h2>
+        <img src='/logoMapHive.png' alt="logo Maphive" style={{width: '50px', marginBottom: '1px', display: isMenuOpen ? 'block' : 'none',}}></img>
+        <h2 style={{textAlign: 'center', marginBottom: '5px', fontSize: '30px', color: 'black', fontFamily: '"Akaya Telivigala", serif',}}>MapHive</h2>
         <SideMenuButton isOpen={isMenuOpen} onClick={() => setIsMenuOpen(!isMenuOpen)}>
           <img src={`${process.env.PUBLIC_URL}/more.png`} alt="Menu" />
           {isMenuOpen && <span>Meniu</span>}
