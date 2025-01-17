@@ -412,6 +412,14 @@ const Harta = () => {
     setRouteCleared(true);  // To trigger route removal and reset
   };
 
+  useEffect(() => {
+    if (routeCleared) {
+      // Allow selecting new locations after reset
+      setStartPoint(null);
+      setEndPoint(null);
+      setRouteCleared(false); // Reset state for further selection
+    }
+  }, [routeCleared]);
 
   useEffect(() => {
     const fetchLocatiiUtilizator = async () => {
