@@ -12,7 +12,7 @@ const LocatiiUtilizator = () => {
 
       try {
         const response = await axios.get(
-          `https://de9b-86-124-206-15.ngrok-free.app/api/locatii-utilizator/locatii/utilizator/${utilizatorId}`,
+          `https://6ac7-86-124-206-1.ngrok-free.app/api/locatii-utilizator/locatii/utilizator/${utilizatorId}`,
           { headers: { "ngrok-skip-browser-warning": "true" } }
         );
         setLocatii(response.data);
