@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { MapContainer, TileLayer, Marker, useMapEvents, Popup } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
+import "leaflet-routing-machine";
 import L from "leaflet";
 import styled from "styled-components";
 import { useNavigate } from 'react-router-dom';
@@ -322,7 +323,26 @@ const Harta = () => {
   const navigate = useNavigate();
   const buttonContainerRef = useRef(null);
   const [locatiiUtilizator, setLocatiiUtilizator] = useState([]);
+  const mapRef = useRef(null);
 
+  useEffect(() => {
+    if (mapRef.current) {
+      const map = mapRef.current;
+
+      // Adaugă controlul de rutare
+      const routingControl = L.Routing.control({
+        waypoints: [
+          L.latLng(57.74, 11.94),
+          L.latLng(57.6792, 11.949),
+        ],
+        routeWhileDragging: true,
+      }).addTo(map);
+
+      return () => {
+        map.removeControl(routingControl); // Curăță controlul la demontare
+      };
+    }
+  }, []);
 
   useEffect(() => {
     const fetchLocatiiUtilizator = async () => {
@@ -525,7 +545,7 @@ const Harta = () => {
         </Button>
       </ButtonContainer>
 
-      <MapContainer center={[44.4268, 26.1025]} zoom={13} scrollWheelZoom={true} style={{ height: "100vh", width: "100vw" }}>
+      <MapContainer center={[44.4268, 26.1025]} zoom={13} scrollWheelZoom={true} style={{ height: "100vh", width: "100vw" }} whenCreated={(mapInstance) => (mapRef.current = mapInstance)}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
