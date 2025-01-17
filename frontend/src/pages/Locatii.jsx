@@ -29,6 +29,21 @@ const LocatiiUtilizator = () => {
     fetchLocatiiUtilizator();
   }, []);
 
+  const handleStergereLocatie = async (locatieId) => {
+    const utilizatorId = localStorage.getItem("utilizatorId");
+
+    try {
+      await axios.delete(
+        `https://30f5-188-26-188-176.ngrok-free.app/api/locatii-utilizator/sterge/${utilizatorId}/${locatieId}`
+      );
+      // După ce locația este ștearsă, actualizăm starea pentru a elimina locația din listă
+      setLocatii(locatii.filter(locatie => locatie.id !== locatieId));
+    } catch (err) {
+      setError("Eroare la ștergerea locației.");
+      console.error(err);
+    }
+  };
+
   if (loading) return <p>Se încarcă locațiile...</p>;
   if (error) return <p>{error}</p>;
 
@@ -85,6 +100,19 @@ const LocatiiUtilizator = () => {
               <h2 style={{ margin: "0 0 10px" }}>{locatie.nume}</h2>
               <p><strong>Adresă:</strong> {locatie.adresa}</p>
               <p><strong>Descriere:</strong> {locatie.descriere}</p>
+              <button
+                onClick={() => handleStergereLocatie(locatie.id)}
+                style={{
+                  backgroundColor: "#f44336",
+                  color: "white",
+                  border: "none",
+                  padding: "10px 20px",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                }}
+              >
+                Șterge locația
+              </button>
             </div>
           ))}
         </div>
