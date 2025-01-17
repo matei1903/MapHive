@@ -324,22 +324,50 @@ const Harta = () => {
   const buttonContainerRef = useRef(null);
   const [locatiiUtilizator, setLocatiiUtilizator] = useState([]);
   const mapRef = useRef(null);
+  const [startPoint, setStartPoint] = useState(null);
+  const [endPoint, setEndPoint] = useState(null);
+
+  useMapEvents({
+    click: (e) => {
+      if (!startPoint) {
+        setStartPoint(e.latlng);
+      } else if (!endPoint) {
+        setEndPoint(e.latlng);
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (mapRef.current && startPoint && endPoint) {
+      const map = mapRef.current;
+
+      const routingControl = L.Routing.control({
+        waypoints: [L.latLng(startPoint), L.latLng(endPoint)],
+        routeWhileDragging: true,
+      }).addTo(map);
+
+      return () => {
+        map.removeControl(routingControl);
+      };
+    }
+  }, [startPoint, endPoint]);
 
   useEffect(() => {
     if (mapRef.current) {
       const map = mapRef.current;
 
-      // Adaugă controlul de rutare
+      // Initializează controlul de rutare
       const routingControl = L.Routing.control({
         waypoints: [
-          L.latLng(57.74, 11.94),
-          L.latLng(57.6792, 11.949),
+          L.latLng(44.4268, 26.1025), // București (punct de pornire exemplu)
+          L.latLng(44.4396, 26.0963), // Punct final exemplu
         ],
         routeWhileDragging: true,
       }).addTo(map);
 
+      // Curăță controlul la demontare
       return () => {
-        map.removeControl(routingControl); // Curăță controlul la demontare
+        map.removeControl(routingControl);
       };
     }
   }, []);
@@ -544,6 +572,12 @@ const Harta = () => {
           Toate
         </Button>
       </ButtonContainer>
+      <Button onClick={() => {
+        setStartPoint(null);
+        setEndPoint(null);
+      }}>
+        Resetează ruta
+      </Button>
 
       <MapContainer center={[44.4268, 26.1025]} zoom={13} scrollWheelZoom={true} style={{ height: "100vh", width: "100vw" }} whenCreated={(mapInstance) => (mapRef.current = mapInstance)}>
         <TileLayer
@@ -581,7 +615,7 @@ const Harta = () => {
           <CloseButton onClick={() => setSelectedLocatie(null)}>&times;</CloseButton>
           <PopupTitle>{selectedLocatie.locatie_nume || selectedLocatie.nume}</PopupTitle>
           <PopupContent>
-          <strong>Adresă:</strong> {selectedLocatie.locatie_adresa || selectedLocatie.adresa}<br />
+            <strong>Adresă:</strong> {selectedLocatie.locatie_adresa || selectedLocatie.adresa}<br />
             <strong>Descriere:</strong> {selectedLocatie.descriere}<br />
             <strong>Tip:</strong> {selectedLocatie.tipLocatie?.nume}<br />
             <strong>Recenzii:</strong>
