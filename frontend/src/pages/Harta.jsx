@@ -199,6 +199,7 @@ const RoutingControl = ({ startPoint, endPoint }) => {
         ],
         routeWhileDragging: true,
         show: false,
+        icon: {customMarkerIcon},
       }).addTo(map);
     }
 

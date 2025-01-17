@@ -77,27 +77,3 @@ html, body, #root {
   background-repeat: no-repeat;
 }
 
-.leaflet-zoom-animated{
-  background-image: url("https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png");
-  width: 30px;
-  height: 45px;
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-} 
-.leaflet-interactive{
-  background-image: url("https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png");
-  width: 30px;
-  height: 45px;
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-} 
-.leaflet-marker-draggable{
-  background-image: url("https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png");
-  width: 30px;
-  height: 45px;
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-}
