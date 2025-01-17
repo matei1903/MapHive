@@ -182,7 +182,25 @@ const SideMenuButton = styled.button`
   }
 `;
 
-const RoutingControl = ({ startPoint, endPoint }) => {
+const startIcon = new L.Icon({
+  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png", // Înlocuiește cu calea către icon-ul tău de start
+  iconSize: [30, 40],
+  iconAnchor: [15, 40],
+  popupAnchor: [0, -40],
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  shadowSize: [40, 40],
+});
+
+const endIcon = new L.Icon({
+  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png", // Înlocuiește cu calea către icon-ul tău de start
+  iconSize: [30, 40],
+  iconAnchor: [15, 40],
+  popupAnchor: [0, -40],
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  shadowSize: [40, 40],
+});
+
+const RoutingControl = ({ startPoint, endPoint, clearRoute }) => {
   const map = useMapEvents({});
   const routingControl = useRef(null);
 
@@ -199,7 +217,14 @@ const RoutingControl = ({ startPoint, endPoint }) => {
         ],
         routeWhileDragging: true,
         show: false,
-        icon: {customMarkerIcon},
+        createMarker: function (i, waypoint, n) {
+          // Personalizăm marker-ele
+          if (i === 0) {
+            return L.marker(waypoint.latLng, { icon: startIcon }).bindPopup("Start Point");
+          } else if (i === n - 1) {
+            return L.marker(waypoint.latLng, { icon: endIcon }).bindPopup("End Point");
+          }
+        },
       }).addTo(map);
     }
 
@@ -207,8 +232,12 @@ const RoutingControl = ({ startPoint, endPoint }) => {
       if (routingControl.current) {
         map.removeControl(routingControl.current);
       }
+      // Clear route when route is reset
+      if (clearRoute) {
+        clearRoute();
+      }
     };
-  }, [startPoint, endPoint, map]);
+  }, [startPoint, endPoint, map, clearRoute]);
 
   return null;
 };
@@ -375,6 +404,13 @@ const Harta = () => {
   const [locatiiUtilizator, setLocatiiUtilizator] = useState([]);
   const [startPoint, setStartPoint] = useState(null);
   const [endPoint, setEndPoint] = useState(null);
+  const [routeCleared, setRouteCleared] = useState(false);
+
+  const resetRoute = () => {
+    setStartPoint(null);
+    setEndPoint(null);
+    setRouteCleared(true);  // To trigger route removal and reset
+  };
 
 
   useEffect(() => {
@@ -577,6 +613,9 @@ const Harta = () => {
           Toate
         </Button>
       </ButtonContainer>
+      <button onClick={resetRoute} style={{ position: "absolute", zIndex: 1000, left: 10, top: 10 }}>
+        Resetează ruta
+      </button>
 
       <MapContainer center={[44.4268, 26.1025]} zoom={13} scrollWheelZoom={true} style={{ height: "100vh", width: "100vw" }}>
         <TileLayer
@@ -584,7 +623,7 @@ const Harta = () => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
          <RouteSelector setStartPoint={setStartPoint} setEndPoint={setEndPoint}/>
-         <RoutingControl startPoint={startPoint} endPoint={endPoint} />
+         <RoutingControl startPoint={startPoint} endPoint={endPoint} clearRoute={routeCleared ? resetRoute : null}/>
         {Array.isArray(locatii) && locatii.map((locatie) => {
           return (
             <Marker
