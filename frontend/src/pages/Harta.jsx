@@ -399,6 +399,7 @@ const Harta = () => {
   const [startPoint, setStartPoint] = useState(null);
   const [endPoint, setEndPoint] = useState(null);
   const [routeCleared, setRouteCleared] = useState(false);
+  const map = useMapEvents({});
 
   const resetRoute = () => {
     setStartPoint(null);
